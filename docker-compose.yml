@@ -1,0 +1,50 @@
+services:
+  nginx:
+    container_name: asset-manager-nginx
+    build:
+      context: ./docker/nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - app
+
+  app:
+    container_name: asset-manager-app
+    build:
+      context: ./docker/php
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    container_name: asset-manager-db
+    image: mysql:9.7.1
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: asset_manager
+      MYSQL_USER: asset_user
+      MYSQL_PASSWORD: asset_password
+      TZ: Asia/Tokyo
+    ports:
+      - "3308:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - -h
+        - localhost
+        - -proot
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db-data: {}
