@@ -10,4 +10,6 @@ class TopController extends Controller
     {
         return view('top.index');
     }
+
+    
 }
