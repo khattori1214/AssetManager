@@ -12,22 +12,23 @@
 
     <form action="/login" method="post">
         @csrf
-        <p>社員番号ID</p>
-        <input type="text" name="employee_no">
+
+        @error('login')
+        <div class="error"><span>{{ $message }}</span></div>
+        @enderror
+        
+        <label>社員番号ID</label>
+        <input type="text" id="employee_no" name="employee_no">
         @error('employee_no')
         <div class="error"><span>{{ $message }}</span></div>
         @enderror
-        @error('login')
-        <div class="error"><span>{{ $message }}</span></div>
-        @enderror
-        <p>password</p>
-        <input type="password" name="password">
+    
+        <label>password</label>
+        <input type="password" id="password" name="password">
         @error('password')
         <div class="error"><span>{{ $message }}</span></div>
         @enderror
-        @error('login')
-        <div class="error"><span>{{ $message }}</span></div>
-        @enderror
+        
         <br>
         <input type="submit" value="ログイン">
     </form>
