@@ -3,33 +3,34 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use app\Models\User;
-
+use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    //
-    public function index(){
+    public function index()
+    {
         return view('auth.login');
     }
 
-    public function login(Request $request){
-        $employee_no=$request->employee_no;
-        $password=$request->password;
-
-        if(empty($employee_no)){
-            return '社員番号IDを入力してください';
+    public function login(LoginRequest $request)
+    {
+        $credentials = $request->validated();
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->intended('/top');
         }
-        if(empty($password)){
-            return '社員番号IDを入力してください';
-        }else{
-            return view('top.index');
-        }
+        return back()->withErrors([
+            'login' => '社員番号IDまたはパスワードが正しくありません',
+        ])->onlyInput('employee_no');
     }
 
-     public function logout(Request $request){
-        
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect('/login');
-        }
+    }
 
 }
