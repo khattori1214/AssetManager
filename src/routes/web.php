@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AssetApplicationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TopController;
@@ -18,3 +19,6 @@ Route::post('/logout', [LoginController::class, 'logout']);
 
 // トップ画面表示
 Route::get('/top',[TopController::class,'index']);
+
+// 資産一覧・申請画面表示
+Route::get('/assets',[AssetApplicationController::class,'index']);
