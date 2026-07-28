@@ -7,11 +7,24 @@
 </head>
 
 <body>
+    <section>
+        <?php if($overdueCount): ?>
+        <p>【警告】返却期限を過ぎている資産があります。
+            <?php echo e($overdueCount); ?>
+
+        </p>
+        <?php else: ?>
+        <p>現在、返却期限を超過している資産はありません。</p>
+        <?php endif; ?>
+    </section>
+
+
+
     <a href="/histories">
         <span>利用履歴・返却画面</span>
         <span>現在借りている資産や過去の利用履歴を確認し、貸出中の資産を返却します。</span>
     </a>
-
+    <br>
     <a href="/assets"><span>資産一覧・申請画面</span>
         <span>貸出資産の貸出申請や、消耗品の取得申請を行います。</span>
     </a>

@@ -8,7 +8,13 @@
 
 <body>
     <section>
-        
+        @if ($overdueCount)
+        <p>【警告】返却期限を過ぎている資産があります。
+            {{$overdueCount}}
+        </p>
+        @else
+        <p>現在、返却期限を超過している資産はありません。</p>
+        @endif
     </section>
 
 
