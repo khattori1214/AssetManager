@@ -10,6 +10,24 @@
 <body>
     <h1>資産一覧・申請画面（仮）</h1>
 
+    <!-- 検索機能 -->
+    <div class="box">
+        <form action="/assets/search" method="get">
+            <h3>検索条件</h3>
+            <div>
+                <label>資産名</label>
+                <input type="text" name="keyword" value="{{request('keyword')}}" placeholder="例: PC">
+            </div>
+
+            <!-- <div>
+                <label>カテゴリ</label>
+                <input type="text" name="max" value="{{request('max')}}" placeholder="例: 2000">
+            </div> -->
+
+            <div><button type="submit" id="searchBtn">検索</button></div>
+        </form>
+    </div>
+
     <!-- 貸出資産一覧 -->
     <table border="1">
         <tr>
@@ -21,17 +39,20 @@
             <th>操作</th>
         </tr>
 
-        <tr>
-            @foreach ($assetData as $asset)
+
+        @foreach ($assetData as $asset)
+            <tr>
                 <td scope="col" class="px6 py-2">{{$asset->asset_id}}</td>
                 <td scope="col" class="px6 py-2">{{$asset->asset_name}}</td>
                 <td scope="col" class="px6 py-2">{{$asset->category_id}}</td>
                 <td scope="col" class="px6 py-2">{{$asset->max_loan_days}}</td>
-                
-            @endforeach
-        </tr>
+            </tr>
+        @endforeach
     </table>
 
+    <div>
+        {{ $assetData->links() }}
+    </div>
     <!-- 消耗品一覧 -->
     <table border="1">
         <tr>
@@ -44,10 +65,10 @@
 
         <tr>
             @foreach ($assetData as $asset)
-            <td scope="col" class="px6 py-2">{{$asset->asset_id}}</td>
-            <td scope="col" class="px6 py-2">{{$asset->asset_name}}</td>
-            <td scope="col" class="px6 py-2">{{$asset->category_id}}</td>
-            <td scope="col" class="px6 py-2">{{$asset->stock}}</td>
+                <td scope="col" class="px6 py-2">{{$asset->asset_id}}</td>
+                <td scope="col" class="px6 py-2">{{$asset->asset_name}}</td>
+                <td scope="col" class="px6 py-2">{{$asset->category_id}}</td>
+                <td scope="col" class="px6 py-2">{{$asset->stock}}</td>
             @endforeach
         </tr>
     </table>

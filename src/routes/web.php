@@ -22,3 +22,6 @@ Route::get('/top',[TopController::class,'index']);
 
 // 資産一覧・申請画面表示
 Route::get('/assets',[AssetApplicationController::class,'index']);
+
+// 資産一覧・申請画面での検索機能
+Route::get('/assets/search',[AssetApplicationController::class,'search']);

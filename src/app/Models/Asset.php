@@ -12,7 +12,16 @@ class Asset extends Model
 
     public function assetData()
     {
-        $getassetData = Asset::join('loan_categories', 'assets.category_id', '=', 'loan_categories.category_id')->get();
+        $getassetData = Asset::join('loan_categories', 'assets.category_id', '=', 'loan_categories.category_id')->paginate(10);
         return $getassetData;
+    }
+
+    public function search($keyword)
+    {
+        $getSearch = Asset::leftjoin('loan_categories', 'assets.category_id', '=', 'loan_categories.category_id')
+            ->where('assets.asset_name', 'like', '%' . $keyword . '%')
+            ->select('assets.*', 'loan_categories.max_loan_days')
+                ->paginate(10);
+            return $getSearch;
     }
 }
