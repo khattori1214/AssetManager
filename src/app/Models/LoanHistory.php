@@ -18,5 +18,22 @@ class LoanHistory extends Model
             ->count();
         return $overdueCount;
     }
+    
+    public function historyData(){
+        $loanhistories=LoanHistory::get();
+        return $loanhistories;
+    }
 
+    public function pasthistoryData(){
+        $loanhistories=LoanHistory::get();
+        return $loanhistories;
+    }
+
+
+    public function returnAsset($loanHistoryId){
+        $returnhistories=LoanHistory::where('loan_history_id', $loanHistoryId)
+        ->wherenull('return_date')
+        ->update(['return_date'=>now()]);
+        return $returnhistories;
+    }
 }

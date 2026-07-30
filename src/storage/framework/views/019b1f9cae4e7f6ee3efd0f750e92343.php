@@ -15,11 +15,11 @@
        
 
         <form action="/admin/assets" method="post">
-            @csrf
+            <?php echo csrf_field(); ?>
             <label>資産名</label><br>
             <input type="text" name="asset_name"><br>
             <button type="submit">新規登録</button>
         </form>
 </body>
 
-</html>
+</html><?php /**PATH /var/www/html/resources/views/admin/index.blade.php ENDPATH**/ ?>

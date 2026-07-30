@@ -10,6 +10,7 @@ class Asset extends Model
     //
     protected $table = 'assets';
 
+    protected $fillable = ['asset_name','category_id','stock']; 
     public function assetData()
     {
         $getassetData = Asset::join('loan_categories', 'assets.category_id', '=', 'loan_categories.category_id')->paginate(10);
@@ -23,5 +24,10 @@ class Asset extends Model
             ->select('assets.*', 'loan_categories.max_loan_days')
                 ->paginate(10);
             return $getSearch;
+    }
+
+    public function registerAsset($registerAsset){
+        $registerAssetData= Asset::create($registerAsset);
+        return $registerAssetData;
     }
 }
