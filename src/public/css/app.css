@@ -1,0 +1,54 @@
+/* ログイン画面 */
+
+.login-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    min-height: 100vh;
+    margin: 0;
+}
+
+
+/* トップ画面 */
+body {
+    margin: 0;
+}
+
+.menu-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.menu-card {
+    display: block;
+    flex: 0 0 380px;
+    box-sizing: border-box;
+    padding: 24px;
+
+    color: #212121;
+    text-decoration: none;
+    background-color: #fff;
+
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.menu-card span {
+    display: block;
+}
+
+.menu-card span:first-child {
+    margin-bottom: 12px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-align: center;
+}
