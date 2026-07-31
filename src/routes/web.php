@@ -28,6 +28,12 @@ Route::get('/assets',[AssetApplicationController::class,'index']);
 // 資産一覧・申請画面での検索機能
 Route::get('/assets/search',[AssetApplicationController::class,'search']);
 
+// 資産一覧・申請画面での消耗品取得機能
+Route::post('/assets/acquire',[AssetApplicationController::class,'acquire']);
+
+// 資産一覧・申請画面での消耗品取得機能
+Route::post('/assets/borrow',[AssetApplicationController::class,'acquire']);
+
 // 利用履歴・返却画面の表示
 Route::get('/histories',[UsageHistoryController::class,'index']);
 Route::post('/histories/return',[UsageHistoryController::class,'returnAsset']);

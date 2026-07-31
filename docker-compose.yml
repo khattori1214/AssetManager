@@ -24,6 +24,7 @@ services:
     container_name: asset-manager-db
     image: mysql:9.7.1
     environment:
+      LANG: C.UTF-8
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: asset_manager
       MYSQL_USER: asset_user

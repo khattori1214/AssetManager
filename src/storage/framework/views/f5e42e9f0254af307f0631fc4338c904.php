@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <h1>資産一覧・申請画面（仮）</h1>
+    <h1>資産一覧・申請画面</h1>
 
     <!-- 検索機能 -->
     <div class="box">
@@ -61,7 +61,8 @@
             <th>品名</th>
             <th>カテゴリ</th>
             <th>在庫数</th>
-            <th></th>
+            <th>状態</th>
+            <th>操作</th>
         </tr>
 
         <tr>
@@ -70,9 +71,54 @@
                 <td scope="col" class="px6 py-2"><?php echo e($asset->asset_name); ?></td>
                 <td scope="col" class="px6 py-2"><?php echo e($asset->category_id); ?></td>
                 <td scope="col" class="px6 py-2"><?php echo e($asset->stock); ?></td>
+
+                <!-- 貸出資産取得モーダル -->
+                <button id="openButton" onClick="document.getElementById('modalDialog').showModal()">モーダルを開く(消耗品)</button>
+                <dialog id="modalDialog" class="dialog">
+                    <div id="dialog-container">
+                        <header>
+                            <span>取得</span>
+                            <button id="closeButton" type="button" onclick="document.getElementById('modalDialog').close()">
+                                <p>閉じる</p>
+                            </button>
+                        </header>
+                        <div>Message</div>
+                        <form method="post" action="/assets/acquire">
+                            <?php echo csrf_field(); ?>
+
+                            <input type="hidden" name="asset_id" value="<?php echo e($asset->asset_id); ?>">
+                            <input type="number" name="quantity" min="1" max="<?php echo e($asset->stock); ?>" value="1" required>
+                            <button type="submit">はい</button>
+                            <button type="button" onclick="document.getElementById('modalDialog').close()">いいえ</button>
+                        </form>
+                    </div>
+                </dialog>
+
+                <!-- 消耗品取得モーダル -->
+                <button id="openButton" onClick="document.getElementById('modalDialog').showModal()">モーダルを開く(消耗品)</button>
+                <dialog id="modalDialog" class="dialog">
+                    <div id="dialog-container">
+                        <header>
+                            <span>取得</span>
+                            <button id="closeButton" type="button" onclick="document.getElementById('modalDialog').close()">
+                                <p>閉じる</p>
+                            </button>
+                        </header>
+                        <div>Message</div>
+                        <form method="post" action="/assets/acquire">
+                            <?php echo csrf_field(); ?>
+
+                            <input type="hidden" name="asset_id" value="<?php echo e($asset->asset_id); ?>">
+                            <input type="number" name="quantity" min="1" max="<?php echo e($asset->stock); ?>" value="1" required>
+                            <button type="submit">はい</button>
+                            <button type="button" onclick="document.getElementById('modalDialog').close()">いいえ</button>
+                        </form>
+                    </div>
+                </dialog>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </tr>
     </table>
+
 
 </body>
 
