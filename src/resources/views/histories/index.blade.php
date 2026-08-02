@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="ja">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <title>利用履歴・返却画面</title>
-</head>
-
-<body>
+@section('content')
     <h1>利用履歴・返却画面（仮）</h1>
 
     <h2>現在借りている資産</h2>
@@ -46,6 +40,4 @@
             </tr>
         @endforeach
     </table>
-</body>
-
-</html>
+@endsection

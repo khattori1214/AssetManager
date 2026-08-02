@@ -10,7 +10,14 @@ class Asset extends Model
     //
     protected $table = 'assets';
 
-    protected $fillable = ['asset_name', 'category_id', 'stock'];
+    protected $fillable = [
+        'asset_name',
+        'category_id',
+        'stock',
+        'asset_name',
+        'asset_type',
+        'min_stock',
+    ];
 
     /**
      * 資産一覧・申請画面
@@ -39,12 +46,13 @@ class Asset extends Model
     /**
      * 資産一覧・申請画面-消耗品減算機能-
      */
-    public function decreaseStock($assetId,$quantity){
-        return Asset::where('asset_id',$assetId)
-        ->where('asset_type','consumable')
-        ->where('stock','>',$quantity)
-        ->decrement('stock',$quantity);
-    }   
+    public function decreaseStock($assetId, $quantity)
+    {
+        return Asset::where('asset_id', $assetId)
+            ->where('asset_type', 'consumable')
+            ->where('stock', '>', $quantity)
+            ->decrement('stock', $quantity);
+    }
 
 
     /**

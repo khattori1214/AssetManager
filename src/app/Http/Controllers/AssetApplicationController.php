@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Asset;
 use Illuminate\Http\Request;
 
+
 class AssetApplicationController extends Controller
 {
 
