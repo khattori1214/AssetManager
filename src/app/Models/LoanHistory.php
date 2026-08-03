@@ -10,6 +10,14 @@ class LoanHistory extends Model
     protected $table = 'loan_histories';
     protected $primaryKey = 'loan_history_id';
 
+    protected $fillable = [
+        'user_id',
+        'asset_id',
+        'loan_date',
+        'due_date',
+        'return_date',
+    ];
+
 
     /**
      * トップ画面
@@ -54,5 +62,25 @@ class LoanHistory extends Model
             ->wherenull('return_date')
             ->update(['return_date' => now()]);
         return $returnhistories;
+    }
+
+    // 貸与資産貸出処理
+    public function borrow($userId, $assetId, $dueDate)
+    {
+        $borrowResister = LoanHistory::create([
+            'user_id' => $userId,
+            'asset_id' => $assetId,
+            'due_date' => $dueDate,
+            'loan_date' => now()
+        ]);
+        return $borrowResister;
+    }
+
+    // 貸出中へ更新する
+    public function isBorrowed($assetId)
+    {
+        return LoanHistory::where('asset_id', $assetId)
+            ->wherenull('return_date')
+            ->exists();
     }
 }

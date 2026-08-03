@@ -34,13 +34,20 @@ class Asset extends Model
      * 資産一覧・申請画面-検索機能-
      * 入力された資産名で資産を部分一致検索する
      */
-    public function search($keyword)
+    public function search($keyword, $assetType)
     {
-        $getSearch = Asset::leftjoin('loan_categories', 'assets.category_id', '=', 'loan_categories.category_id')
-            ->where('assets.asset_name', 'like', '%' . $keyword . '%')
-            ->select('assets.*', 'loan_categories.max_loan_days')
-            ->paginate(10);
-        return $getSearch;
+        $query = Asset::leftjoin('loan_categories', 'assets.category_id', '=', 'loan_categories.category_id')
+            ->select('assets.*', 'loan_categories.category_name', 'loan_categories.max_loan_days');
+
+        if (!empty($keyword)) {
+            $query->where('assets.asset_name', 'like', '%' . $keyword . '%');
+        }
+
+        if (!empty($assetType)) {
+            $query->where('assets.asset_type', $assetType);
+        }
+
+        return $query->paginate(10)->withQueryString();
     }
 
     /**
@@ -50,7 +57,11 @@ class Asset extends Model
     {
         return Asset::where('asset_id', $assetId)
             ->where('asset_type', 'consumable')
+<<<<<<< HEAD
             ->where('stock', '>', $quantity)
+=======
+            ->where('stock', '>=', $quantity)
+>>>>>>> e704250 (feat: 資産申請・利用履歴機能を実装)
             ->decrement('stock', $quantity);
     }
 
@@ -65,4 +76,25 @@ class Asset extends Model
         $registerAssetData = Asset::create($registerAsset);
         return $registerAssetData;
     }
+
+    /**
+     * 資産IDからカテゴリ情報付きで資産を取得する
+     */
+    public function findAsset($assetId)
+    {
+        return Asset::join(
+            'loan_categories',
+            'assets.category_id',
+            '=',
+            'loan_categories.category_id'
+        )
+            ->where('assets.asset_id', $assetId)
+            ->where('assets.asset_type', 'loan')
+            ->select(
+                'assets.*',
+                'loan_categories.max_loan_days'
+            )
+            ->first();
+    }
+
 }

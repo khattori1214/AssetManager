@@ -6,8 +6,13 @@
     <h2>現在借りている資産</h2>
     <table border="1">
         <tr>
-            <th>ユーザーID</th>
-            <th>資産ID</th>
+            <th>NO.</th>
+            <th>資産名</th>
+            <th>カテゴリ</th>
+            <th>種別</th>
+            <th>貸出日</th>
+            <th>状態</th>
+            <th>操作</th>
         </tr>
 
         @foreach ($loanhistoryData as $history)
@@ -29,8 +34,13 @@
     <h2>過去に申請した資産</h2>
     <table border="1">
         <tr>
-            <th>ユーザーID</th>
-            <th>資産ID</th>
+            <th>NO.</th>
+            <th>資産名</th>
+            <th>カテゴリ</th>
+            <th>種別</th>
+            <th>貸出日</th>
+            <th>返却日</th>
+            <th>状態</th>
         </tr>
 
         @foreach ($pastloanhistoryData as $history)
@@ -40,4 +50,8 @@
             </tr>
         @endforeach
     </table>
+<<<<<<< HEAD
+=======
+
+>>>>>>> e704250 (feat: 資産申請・利用履歴機能を実装)
 @endsection

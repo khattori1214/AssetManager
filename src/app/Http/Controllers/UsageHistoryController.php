@@ -30,4 +30,5 @@ class UsageHistoryController extends Controller
         $loanhistory->returnAsset($loanHistoryId, Auth::id());
         return redirect('/histories');
     }
+
 }
