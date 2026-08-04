@@ -19,6 +19,11 @@
             <tr>
                 <td>{{ $history->user_id }}</td>
                 <td>{{ $history->asset_id }}</td>
+                <td>{{ $history->user_id }}</td>
+                <td>{{ $history->asset_id }}</td>
+                <td>{{ $history->user_id }}</td>
+
+                <td>{{ $history->asset_id }}</td>
                 <td>
                     <form action="/histories/return" method="POST">
                         @csrf
@@ -50,8 +55,5 @@
             </tr>
         @endforeach
     </table>
-<<<<<<< HEAD
-=======
 
->>>>>>> e704250 (feat: 資産申請・利用履歴機能を実装)
 @endsection

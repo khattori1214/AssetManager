@@ -57,11 +57,11 @@ class Asset extends Model
     {
         return Asset::where('asset_id', $assetId)
             ->where('asset_type', 'consumable')
-<<<<<<< HEAD
+
             ->where('stock', '>', $quantity)
-=======
+
             ->where('stock', '>=', $quantity)
->>>>>>> e704250 (feat: 資産申請・利用履歴機能を実装)
+
             ->decrement('stock', $quantity);
     }
 
