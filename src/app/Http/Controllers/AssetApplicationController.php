@@ -47,6 +47,10 @@ class AssetApplicationController extends Controller
         $validated = $request->validate([
             'asset_id' => ['required', 'integer'],
             'quantity' => ['required', 'integer', 'min:1'],
+            [
+                'quantity.required' =>
+                    __('messages.asset.quantity_required'),
+            ]
         ]);
 
         try {
@@ -64,16 +68,25 @@ class AssetApplicationController extends Controller
                 );
 
                 if ($acquireData === 0) {
-                    throw new \Exception('在庫不足');
+                   throw new \RuntimeException(
+                        'insufficient_stock');
                 }
 
             });
             return redirect('/assets')
-                ->with('success', '取得申請が完了しました。');
-        } catch (\Exception $e) {
+                ->with('success',
+                __('messages.asset.acquire_success'));
+        } catch (\RuntimeException $e) {
+            return redirect('/assets')->with(
+                'error',
+                __('messages.asset.insufficient_stock')
+            );
 
-            return redirect('/assets')
-                ->with('error', '在庫数が不足しています。');
+        } catch (\Throwable $e) {
+            return redirect('/assets')->with(
+                'error',
+                __('messages.asset.processing_failed')
+            );
         }
     }
 
@@ -96,7 +109,10 @@ class AssetApplicationController extends Controller
 
         if (!$asset) {
             return redirect('/assets')
-                ->with('error', '対象資産が見つかりません。');
+                ->with(
+                'error',
+                __('messages.asset.asset_not_found')
+            );
         }
 
         $maxLoanDays = $asset->max_loan_days;
@@ -105,7 +121,8 @@ class AssetApplicationController extends Controller
         try {
             DB::transaction(function () use ($borrow, $userId, $assetId, $dueDate) {
                 if ($borrow->isBorrowed($assetId)) {
-                    throw new \RuntimeException('already_borrowed');
+                    throw new  \RuntimeException(
+                        'already_borrowed');
                 }
 
                 $borrow->borrow(
@@ -115,22 +132,22 @@ class AssetApplicationController extends Controller
                 );
             });
 
-            return redirect('/assets')
-                ->with('success', '貸出申請が完了しました。');
+ return redirect('/assets')->with(
+                'success',
+                __('messages.asset.borrow_success')
+            );
 
         } catch (\RuntimeException $e) {
-            return redirect('/assets')
-                ->with(
-                    'error',
-                    '選択した資産は、すでに貸出中です。'
-                );
+            return redirect('/assets')->with(
+                'error',
+                __('messages.asset.already_borrowed')
+            );
 
         } catch (\Throwable $e) {
-            return redirect('/assets')
-                ->with(
-                    'error',
-                    '処理に失敗しました。時間をおいて再度お試しください。'
-                );
+            return redirect('/assets')->with(
+                'error',
+                __('messages.asset.processing_failed')
+            );
         }
     }
 }

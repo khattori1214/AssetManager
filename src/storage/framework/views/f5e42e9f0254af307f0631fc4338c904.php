@@ -41,7 +41,7 @@
             <div>
                 <label for="keyword">資産名</label>
 
-                <input type="text" id="keyword" name="keyword" value="<?php echo e(request('keyword')); ?>" placeholder="例：PC">
+                <input type="text" id="keyword" name="keyword" value="<?php echo e(request('keyword')); ?>" placeholder="例:PC">
             </div>
 
             <div>
@@ -298,65 +298,6 @@
         </tbody>
     </table>
 
-    <div>
-        <?php echo e($assetData->links()); ?>
-
-    </div>
-
-        <tr>
-            <?php $__currentLoopData = $assetData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $asset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <td scope="col" class="px6 py-2"><?php echo e($asset->asset_id); ?></td>
-                <td scope="col" class="px6 py-2"><?php echo e($asset->asset_name); ?></td>
-                <td scope="col" class="px6 py-2"><?php echo e($asset->category_id); ?></td>
-                <td scope="col" class="px6 py-2"><?php echo e($asset->stock); ?></td>
-
-                <!-- 貸出資産取得モーダル -->
-                <button id="openButton" onClick="document.getElementById('modalDialog').showModal()">モーダルを開く(貸出資産)</button>
-                <dialog id="modalDialog" class="dialog">
-                    <div id="dialog-container">
-                        <header>
-                            <span>取得</span>
-                            <button id="closeButton" type="button" onclick="document.getElementById('modalDialog').close()">
-                                <p>閉じる</p>
-                            </button>
-                        </header>
-                        <div>Message</div>
-                        <form method="post" action="/assets/borrow">
-                            <?php echo csrf_field(); ?>
-
-                            <input type="submit" name="asset_id" value="<?php echo e($asset->asset_id); ?>">
-                            <input type="submit" name="quantity" min="1" max="<?php echo e($asset->stock); ?>" value="1" required>
-                            <button type="submit">はい</button>
-                            <button type="button" onclick="document.getElementById('modalDialog').close()">いいえ</button>
-                        </form>
-                    </div>
-                </dialog>
-
-                <!-- 消耗品取得モーダル -->
-                <button id="openButton" onClick="document.getElementById('modalDialog').showModal()">モーダルを開く(消耗品)</button>
-                <dialog id="modalDialog" class="dialog">
-                    <div id="dialog-container">
-                        <header>
-                            <span>取得</span>
-                            <button id="closeButton" type="button" onclick="document.getElementById('modalDialog').close()">
-                                <p>閉じる</p>
-                            </button>
-                        </header>
-                        <div>Message</div>
-                        <form method="post" action="/assets/acquire">
-                            <?php echo csrf_field(); ?>
-
-                            <input type="hidden" name="asset_id" value="<?php echo e($asset->asset_id); ?>">
-                            <input type="number" name="quantity" min="1" max="<?php echo e($asset->stock); ?>" value="1" required>
-                            <button type="submit">はい</button>
-                            <button type="button" onclick="document.getElementById('modalDialog').close()">いいえ</button>
-                        </form>
-                    </div>
-                </dialog>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-        </tr>
-    </table>
-
-
+       
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /var/www/html/resources/views/assets/index.blade.php ENDPATH**/ ?>

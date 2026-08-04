@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class CsvFile extends Model
 {
-   $csvData = CsvFile::orderByDesc('generated_at')->get();
+   // $csvData = CsvFile::orderByDesc('generated_at')->get();
 }

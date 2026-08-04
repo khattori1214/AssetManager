@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <h1>資産登録・在庫管理画面（仮）</h1>
 <button type="button"
@@ -25,77 +23,78 @@
     </tr>
 
 
-    @foreach ($assetManagementData as $asset)
-    @if($asset->asset_type == 'loan')
+    <?php $__currentLoopData = $assetManagementData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $asset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    <?php if($asset->asset_type == 'loan'): ?>
     <tr>
-        <td>{{ $asset->asset_id }}</td>
-        <td>{{ $asset->asset_name }}</td>
-        <td>{{ $asset->category_name }}</td>
+        <td><?php echo e($asset->asset_id); ?></td>
+        <td><?php echo e($asset->asset_name); ?></td>
+        <td><?php echo e($asset->category_name); ?></td>
         <td>利用可能</td>
-        <td>{{ $asset->max_loan_days }}日</td>
+        <td><?php echo e($asset->max_loan_days); ?>日</td>
         <td>
-            <a href="/admin/assets/{{ $asset->asset_id }}/edit">編集</a>
+            <a href="/admin/assets/<?php echo e($asset->asset_id); ?>/edit">編集</a>
 
-            <form action="/admin/assets/{{ $asset->asset_id }}" method="post" style="display:inline;">
-                @csrf
-                @method('DELETE')
+            <form action="/admin/assets/<?php echo e($asset->asset_id); ?>" method="post" style="display:inline;">
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('DELETE'); ?>
                 <button type="submit">削除</button>
             </form>
         </td>
     </tr>
-    @endif
-    @endforeach
+    <?php endif; ?>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 </table>
 
 <div>
-    {{ $assetManagementData->links() }}
+    <?php echo e($assetManagementData->links()); ?>
+
 </div>
 <!-- 消耗品一覧 -->
 <table border="1">
 
 
-    @foreach ($assetManagementData as $asset)
-    @if($asset->asset_type == 'consumable')
+    <?php $__currentLoopData = $assetManagementData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $asset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    <?php if($asset->asset_type == 'consumable'): ?>
     <tr>
-        <td>{{ $asset->asset_id }}</td>
-        <td>{{ $asset->asset_name }}</td>
-        <td>{{ $asset->category_name }}</td>
-        <td>{{ $asset->stock }}</td>
+        <td><?php echo e($asset->asset_id); ?></td>
+        <td><?php echo e($asset->asset_name); ?></td>
+        <td><?php echo e($asset->category_name); ?></td>
+        <td><?php echo e($asset->stock); ?></td>
 
         <td>
-            @if($asset->stock <= $asset->min_stock)
+            <?php if($asset->stock <= $asset->min_stock): ?>
                 要発注
-                @else
+                <?php else: ?>
                 在庫あり
-                @endif
+                <?php endif; ?>
         </td>
 
         <td>
-            <a href="/admin/assets/{{ $asset->asset_id }}/edit">編集</a>
+            <a href="/admin/assets/<?php echo e($asset->asset_id); ?>/edit">編集</a>
 
-            <form action="/admin/assets/{{ $asset->asset_id }}/stock" method="post" style="display:inline;">
-                @csrf
-                @method('PATCH')
+            <form action="/admin/assets/<?php echo e($asset->asset_id); ?>/stock" method="post" style="display:inline;">
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('PATCH'); ?>
 
                 <input type="number"
                     name="stock"
-                    value="{{ $asset->stock }}"
+                    value="<?php echo e($asset->stock); ?>"
                     min="0">
 
                 <button type="submit">在庫更新</button>
             </form>
 
-            <form action="/admin/assets/{{ $asset->asset_id }}" method="post" style="display:inline;">
-                @csrf
-                @method('DELETE')
+            <form action="/admin/assets/<?php echo e($asset->asset_id); ?>" method="post" style="display:inline;">
+                <?php echo csrf_field(); ?>
+                <?php echo method_field('DELETE'); ?>
 
                 <button type="submit">削除</button>
             </form>
 
         </td>
     </tr>
-    @endif
-    @endforeach
+    <?php endif; ?>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 </table>
 
 
@@ -104,7 +103,7 @@
     <h2>貸出資産登録</h2>
 
     <form action="/admin/assets" method="post">
-        @csrf
+        <?php echo csrf_field(); ?>
 
         <input type="hidden" name="asset_type" value="loan">
 
@@ -114,21 +113,9 @@
         </div>
 
         <div>
-            <label></label>
-            <input type="number" name="asset_type" required>
+            <label>カテゴリID</label>
+            <input type="number" name="category_id" required>
         </div>
-
-        <div>
-            <label></label>
-            <input type="number" name="stock" required>
-        </div>
-
-        <div>
-            <label></label>
-            <input type="number" name="min_stock" required>
-        </div>
-
-    
 
         <button type="submit">登録</button>
 
@@ -143,7 +130,7 @@
     <h2>消耗品登録</h2>
 
     <form action="/admin/assets" method="post">
-        @csrf
+        <?php echo csrf_field(); ?>
 
         <input type="hidden" name="asset_type" value="consumable">
 
@@ -177,4 +164,5 @@
 </dialog>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /var/www/html/resources/views/admin/index.blade.php ENDPATH**/ ?>

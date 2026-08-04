@@ -17,12 +17,12 @@ class AssetManagementController extends Controller
         $assetModel = new Asset();
         $assetManagementData = $assetModel->assetData();
 
-        $csvModel= new CsvFile();
-        $csvData= $csvModel->csvData();
+        // $csvModel= new CsvFile();
+        // $csvData= $csvModel->csvData();
 
         return view('admin.index', [
             'assetManagementData' => $assetManagementData,
-            'csvData'=>$csvData,
+            // 'csvData'=>$csvData,
         ]);
     }
 
@@ -110,10 +110,10 @@ class AssetManagementController extends Controller
  * 管理者画面
  * CSVファイルをダウンロードする
  */
-public function download($id)
-{
+// public function download($id)
+// {
 
-}
+// }
 
 
 }

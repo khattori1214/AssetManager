@@ -41,7 +41,7 @@
             <div>
                 <label for="keyword">資産名</label>
 
-                <input type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="例：PC">
+                <input type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="例:PC">
             </div>
 
             <div>
@@ -295,63 +295,5 @@
         </tbody>
     </table>
 
-    <div>
-        {{ $assetData->links() }}
-    </div>
-
-        <tr>
-            @foreach ($assetData as $asset)
-                <td scope="col" class="px6 py-2">{{$asset->asset_id}}</td>
-                <td scope="col" class="px6 py-2">{{$asset->asset_name}}</td>
-                <td scope="col" class="px6 py-2">{{$asset->category_id}}</td>
-                <td scope="col" class="px6 py-2">{{$asset->stock}}</td>
-
-                <!-- 貸出資産取得モーダル -->
-                <button id="openButton" onClick="document.getElementById('modalDialog').showModal()">モーダルを開く(貸出資産)</button>
-                <dialog id="modalDialog" class="dialog">
-                    <div id="dialog-container">
-                        <header>
-                            <span>取得</span>
-                            <button id="closeButton" type="button" onclick="document.getElementById('modalDialog').close()">
-                                <p>閉じる</p>
-                            </button>
-                        </header>
-                        <div>Message</div>
-                        <form method="post" action="/assets/borrow">
-                            @csrf
-
-                            <input type="submit" name="asset_id" value="{{ $asset->asset_id }}">
-                            <input type="submit" name="quantity" min="1" max="{{ $asset->stock }}" value="1" required>
-                            <button type="submit">はい</button>
-                            <button type="button" onclick="document.getElementById('modalDialog').close()">いいえ</button>
-                        </form>
-                    </div>
-                </dialog>
-
-                <!-- 消耗品取得モーダル -->
-                <button id="openButton" onClick="document.getElementById('modalDialog').showModal()">モーダルを開く(消耗品)</button>
-                <dialog id="modalDialog" class="dialog">
-                    <div id="dialog-container">
-                        <header>
-                            <span>取得</span>
-                            <button id="closeButton" type="button" onclick="document.getElementById('modalDialog').close()">
-                                <p>閉じる</p>
-                            </button>
-                        </header>
-                        <div>Message</div>
-                        <form method="post" action="/assets/acquire">
-                            @csrf
-
-                            <input type="hidden" name="asset_id" value="{{ $asset->asset_id }}">
-                            <input type="number" name="quantity" min="1" max="{{ $asset->stock }}" value="1" required>
-                            <button type="submit">はい</button>
-                            <button type="button" onclick="document.getElementById('modalDialog').close()">いいえ</button>
-                        </form>
-                    </div>
-                </dialog>
-            @endforeach
-        </tr>
-    </table>
-
-
+       
 @endsection
