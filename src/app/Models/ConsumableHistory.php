@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ConsumableHistory extends Model
 {
-
     protected $table = 'consumable_histories';
 
     protected $primaryKey = 'consumable_history_id';
@@ -18,11 +17,34 @@ class ConsumableHistory extends Model
         'quantity',
     ];
 
-    //利用履歴・返却画面で使用
-    public function historyData()
+    /**
+     * 利用履歴・返却画面
+     * ログインユーザーの消耗品取得履歴を取得する
+     */
+    public function historyData($userId)
     {
-        $consumablehistories = ConsumableHistory::get();
-        return $consumablehistories;
+        return ConsumableHistory::join(
+            'assets',
+            'consumable_histories.asset_id',
+            '=',
+            'assets.asset_id'
+        )
+            ->leftJoin(
+                'loan_categories',
+                'loan_categories.category_id',
+                '=',
+                'assets.category_id'
+            )
+            ->where('consumable_histories.user_id', $userId)
+            ->orderByDesc('consumable_histories.request_date')
+            ->select(
+                'consumable_histories.*',
+                'assets.asset_name',
+                'assets.asset_type',
+                'assets.unit',
+                'loan_categories.category_name'
+            )
+            ->paginate(10, ['*'], 'consumable_page');
     }
 
     /**
@@ -41,5 +63,4 @@ class ConsumableHistory extends Model
             'quantity' => $quantity,
         ]);
     }
-
 }

@@ -29,15 +29,17 @@ Route::get('/assets', [AssetApplicationController::class, 'index']);
 // 資産一覧・申請画面での検索機能
 Route::get('/assets/search', [AssetApplicationController::class, 'search']);
 
-// 資産一覧・申請画面での消耗品取得機能
+// 資産一覧・申請画面での消耗品減算処理
 Route::post('/assets/acquire', [AssetApplicationController::class, 'acquire']);
 
-// 資産一覧・申請画面での消耗品取得機能
-Route::post('/assets/borrow', [AssetApplicationController::class, 'acquire']);
+// 資産一覧・申請画面での貸出資産貸出処理
+Route::post('/assets/borrow', [AssetApplicationController::class, 'borrow']);
 
 // 利用履歴・返却画面の表示
 Route::get('/histories', [UsageHistoryController::class, 'index']);
 Route::post('/histories/return', [UsageHistoryController::class, 'returnAsset']);
+
+
 
 // 【管理者用】資産登録・在庫管理画面の表示
 

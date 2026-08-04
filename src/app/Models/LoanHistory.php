@@ -33,35 +33,73 @@ class LoanHistory extends Model
     }
 
     /**
-     * 利用履歴・返却画面
      * ログインユーザーが現在借りている資産を取得する
      */
-    public function historyData()
+    public function historyData($userId)
     {
-        $loanhistories = LoanHistory::get();
-        return $loanhistories;
+        return LoanHistory::join(
+            'assets',
+            'loan_histories.asset_id',
+            '=',
+            'assets.asset_id'
+        )
+            ->join(
+                'loan_categories',
+                'assets.category_id',
+                '=',
+                'loan_categories.category_id'
+            )
+            ->where('loan_histories.user_id', $userId)
+            ->whereNull('loan_histories.return_date')
+            ->select(
+                'loan_histories.*',
+                'assets.asset_name',
+                'assets.asset_type',
+                'loan_categories.category_name'
+            )
+            ->get();
     }
 
     /**
-     * 利用履歴・返却画面
      * ログインユーザーが過去に借りた資産を取得する
      */
-    public function pasthistoryData()
+    public function pasthistoryData($userId)
     {
-        $loanhistories = LoanHistory::get();
-        return $loanhistories;
+        return LoanHistory::join(
+            'assets',
+            'loan_histories.asset_id',
+            '=',
+            'assets.asset_id'
+        )
+            ->join(
+                'loan_categories',
+                'assets.category_id',
+                '=',
+                'loan_categories.category_id'
+            )
+            ->where('loan_histories.user_id', $userId)
+            ->whereNotNull('loan_histories.return_date')
+            ->orderByDesc('loan_histories.return_date')
+            ->select(
+                'loan_histories.*',
+                'assets.asset_name',
+                'assets.asset_type',
+                'loan_categories.category_name'
+            )
+            ->paginate(10);
     }
 
     /**
-     * 利用履歴・返却画面
      * 指定した貸出履歴の返却日を現在日時に更新する
      */
-    public function returnAsset($loanHistoryId)
+    public function returnAsset($loanHistoryId, $userId)
     {
-        $returnhistories = LoanHistory::where('loan_history_id', $loanHistoryId)
-            ->wherenull('return_date')
-            ->update(['return_date' => now()]);
-        return $returnhistories;
+        return LoanHistory::where('loan_history_id', $loanHistoryId)
+            ->where('user_id', $userId)
+            ->whereNull('return_date')
+            ->update([
+                'return_date' => now(),
+            ]);
     }
 
     // 貸与資産貸出処理

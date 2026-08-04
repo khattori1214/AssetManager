@@ -1,39 +1,39 @@
-@extends('layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <h1>資産一覧・申請画面</h1>
 
-    {{-- 成功メッセージ --}}
-    @if (session('success'))
+    
+    <?php if(session('success')): ?>
         <div>
-            {{ session('success') }}
-        </div>
-    @endif
+            <?php echo e(session('success')); ?>
 
-    {{-- エラーメッセージ --}}
-    @if (session('error'))
+        </div>
+    <?php endif; ?>
+
+    
+    <?php if(session('error')): ?>
         <div>
-            {{ session('error') }}
-        </div>
-    @endif
+            <?php echo e(session('error')); ?>
 
-    {{-- バリデーションエラー --}}
-    @if ($errors->any())
+        </div>
+    <?php endif; ?>
+
+    
+    <?php if($errors->any()): ?>
         <div>
-            @foreach ($errors->all() as $error)
-                <p>{{ $error }}</p>
-            @endforeach
+            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <p><?php echo e($error); ?></p>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
-    @endif
+    <?php endif; ?>
 
-    {{-- 貸出ロック警告 --}}
-    @if ($isLocked ?? false)
+    
+    <?php if($isLocked ?? false): ?>
         <div>
             【警告】返却期限を7日以上過ぎている資産があります。
         </div>
-    @endif
+    <?php endif; ?>
 
-    {{-- 検索フォーム --}}
+    
     <div class="box">
         <form action="/assets/search" method="get">
             <h2>検索条件</h2>
@@ -41,7 +41,7 @@
             <div>
                 <label for="keyword">資産名</label>
 
-                <input type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="例：PC">
+                <input type="text" id="keyword" name="keyword" value="<?php echo e(request('keyword')); ?>" placeholder="例：PC">
             </div>
 
             <div>
@@ -50,11 +50,11 @@
                 <select id="asset_type" name="asset_type">
                     <option value="">すべて</option>
 
-                    <option value="loan" @selected(request('asset_type') === 'loan')>
+                    <option value="loan" <?php if(request('asset_type') === 'loan'): echo 'selected'; endif; ?>>
                         貸出資産
                     </option>
 
-                    <option value="consumable" @selected(request('asset_type') === 'consumable')>
+                    <option value="consumable" <?php if(request('asset_type') === 'consumable'): echo 'selected'; endif; ?>>
                         消耗品
                     </option>
                 </select>
@@ -66,7 +66,7 @@
         </form>
     </div>
 
-    {{-- 貸出資産一覧 --}}
+    
     <h2>貸出資産一覧</h2>
 
     <table border="1">
@@ -82,13 +82,13 @@
         </thead>
 
         <tbody>
-            @php
+            <?php
                 $loanAssetExists = false;
-            @endphp
+            ?>
 
-            @foreach ($assetData as $asset)
-                @if ($asset->asset_type === 'loan')
-                    @php
+            <?php $__currentLoopData = $assetData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $asset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php if($asset->asset_type === 'loan'): ?>
+                    <?php
                         $loanAssetExists = true;
 
                         $loanHistory = new \App\Models\LoanHistory();
@@ -96,60 +96,61 @@
                         $isBorrowed = $loanHistory->isBorrowed(
                             $asset->asset_id
                         );
-                    @endphp
+                    ?>
 
                     <tr>
-                        <td>{{ $asset->asset_id }}</td>
+                        <td><?php echo e($asset->asset_id); ?></td>
 
-                        <td>{{ $asset->asset_name }}</td>
+                        <td><?php echo e($asset->asset_name); ?></td>
 
                         <td>
-                            {{ $asset->category_name }}
+                            <?php echo e($asset->category_name); ?>
+
                         </td>
 
                         <td>
-                            @if ($isBorrowed)
+                            <?php if($isBorrowed): ?>
                                 貸出中
-                            @else
+                            <?php else: ?>
                                 利用可能
-                            @endif
+                            <?php endif; ?>
                         </td>
 
                         <td>
-                            {{ $asset->max_loan_days }}日
+                            <?php echo e($asset->max_loan_days); ?>日
                         </td>
 
                         <td>
                             <button type="button" onclick="
                                             document
                                                 .getElementById(
-                                                    'borrowModal{{ $asset->asset_id }}'
+                                                    'borrowModal<?php echo e($asset->asset_id); ?>'
                                                 )
                                                 .showModal()
-                                        " @disabled(
+                                        " <?php if(
                                             $isBorrowed ||
                                             ($isLocked ?? false)
-                                        )>
-                                @if ($isBorrowed)
+                                        ): echo 'disabled'; endif; ?>>
+                                <?php if($isBorrowed): ?>
                                     貸出中
-                                @else
+                                <?php else: ?>
                                     貸出
-                                @endif
+                                <?php endif; ?>
                             </button>
 
-                            {{-- 貸出確認ダイアログ --}}
-                            <dialog id="borrowModal{{ $asset->asset_id }}" class="dialog">
+                            
+                            <dialog id="borrowModal<?php echo e($asset->asset_id); ?>" class="dialog">
                                 <h2>貸出確認</h2>
 
                                 <p>
-                                    「{{ $asset->asset_name }}」を
+                                    「<?php echo e($asset->asset_name); ?>」を
                                     貸し出しますか？
                                 </p>
 
                                 <form method="post" action="/assets/borrow">
-                                    @csrf
+                                    <?php echo csrf_field(); ?>
 
-                                    <input type="hidden" name="asset_id" value="{{ $asset->asset_id }}">
+                                    <input type="hidden" name="asset_id" value="<?php echo e($asset->asset_id); ?>">
 
                                     <button type="submit">
                                         はい
@@ -158,7 +159,7 @@
                                     <button type="button" onclick="
                                                     document
                                                         .getElementById(
-                                                            'borrowModal{{ $asset->asset_id }}'
+                                                            'borrowModal<?php echo e($asset->asset_id); ?>'
                                                         )
                                                         .close()
                                                 ">
@@ -168,20 +169,20 @@
                             </dialog>
                         </td>
                     </tr>
-                @endif
-            @endforeach
+                <?php endif; ?>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-            @if (!$loanAssetExists)
+            <?php if(!$loanAssetExists): ?>
                 <tr>
                     <td colspan="6">
                         貸出資産はありません。
                     </td>
                 </tr>
-            @endif
+            <?php endif; ?>
         </tbody>
     </table>
 
-    {{-- 消耗品一覧 --}}
+    
     <h2>消耗品一覧</h2>
 
     <table border="1">
@@ -197,72 +198,74 @@
         </thead>
 
         <tbody>
-            @php
+            <?php
                 $consumableExists = false;
-            @endphp
+            ?>
 
-            @foreach ($assetData as $asset)
-                @if ($asset->asset_type === 'consumable')
-                    @php
+            <?php $__currentLoopData = $assetData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $asset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php if($asset->asset_type === 'consumable'): ?>
+                    <?php
                         $consumableExists = true;
-                    @endphp
+                    ?>
 
                     <tr>
-                        <td>{{ $asset->asset_id }}</td>
+                        <td><?php echo e($asset->asset_id); ?></td>
 
-                        <td>{{ $asset->asset_name }}</td>
+                        <td><?php echo e($asset->asset_name); ?></td>
 
                         <td>
-                            {{ $asset->category_name }}
+                            <?php echo e($asset->category_name); ?>
+
                         </td>
 
                         <td>
-                            {{ $asset->stock }}
+                            <?php echo e($asset->stock); ?>
+
                         </td>
 
                         <td>
-                            @if ($asset->stock < $asset->min_stock)
+                            <?php if($asset->stock < $asset->min_stock): ?>
                                 <strong>要発注</strong>
-                            @else
+                            <?php else: ?>
                                 在庫あり
-                            @endif
+                            <?php endif; ?>
                         </td>
 
                         <td>
                             <button type="button" onclick="
                                             document
                                                 .getElementById(
-                                                    'acquireModal{{ $asset->asset_id }}'
+                                                    'acquireModal<?php echo e($asset->asset_id); ?>'
                                                 )
                                                 .showModal()
-                                        " @disabled(
+                                        " <?php if(
                                             $asset->stock <= 0 ||
                                             ($isLocked ?? false)
-                                        )>
+                                        ): echo 'disabled'; endif; ?>>
                                 取得
                             </button>
 
-                            {{-- 消耗品取得ダイアログ --}}
-                            <dialog id="acquireModal{{ $asset->asset_id }}" class="dialog">
+                            
+                            <dialog id="acquireModal<?php echo e($asset->asset_id); ?>" class="dialog">
                                 <h2>取得数量入力</h2>
 
                                 <p>
-                                    「{{ $asset->asset_name }}」の
+                                    「<?php echo e($asset->asset_name); ?>」の
                                     取得数量を入力してください。
                                 </p>
 
                                 <form method="post" action="/assets/acquire">
-                                    @csrf
+                                    <?php echo csrf_field(); ?>
 
-                                    <input type="hidden" name="asset_id" value="{{ $asset->asset_id }}">
+                                    <input type="hidden" name="asset_id" value="<?php echo e($asset->asset_id); ?>">
 
                                     <div>
-                                        <label for="quantity{{ $asset->asset_id }}">
+                                        <label for="quantity<?php echo e($asset->asset_id); ?>">
                                             数量
                                         </label>
 
-                                        <input type="number" id="quantity{{ $asset->asset_id }}" name="quantity" min="1"
-                                            max="{{ $asset->stock }}" value="1" required>
+                                        <input type="number" id="quantity<?php echo e($asset->asset_id); ?>" name="quantity" min="1"
+                                            max="<?php echo e($asset->stock); ?>" value="1" required>
                                     </div>
 
                                     <button type="submit">
@@ -272,7 +275,7 @@
                                     <button type="button" onclick="
                                                     document
                                                         .getElementById(
-                                                            'acquireModal{{ $asset->asset_id }}'
+                                                            'acquireModal<?php echo e($asset->asset_id); ?>'
                                                         )
                                                         .close()
                                                 ">
@@ -282,29 +285,30 @@
                             </dialog>
                         </td>
                     </tr>
-                @endif
-            @endforeach
+                <?php endif; ?>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-            @if (!$consumableExists)
+            <?php if(!$consumableExists): ?>
                 <tr>
                     <td colspan="6">
                         消耗品はありません。
                     </td>
                 </tr>
-            @endif
+            <?php endif; ?>
         </tbody>
     </table>
 
     <div>
-        {{ $assetData->links() }}
+        <?php echo e($assetData->links()); ?>
+
     </div>
 
         <tr>
-            @foreach ($assetData as $asset)
-                <td scope="col" class="px6 py-2">{{$asset->asset_id}}</td>
-                <td scope="col" class="px6 py-2">{{$asset->asset_name}}</td>
-                <td scope="col" class="px6 py-2">{{$asset->category_id}}</td>
-                <td scope="col" class="px6 py-2">{{$asset->stock}}</td>
+            <?php $__currentLoopData = $assetData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $asset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <td scope="col" class="px6 py-2"><?php echo e($asset->asset_id); ?></td>
+                <td scope="col" class="px6 py-2"><?php echo e($asset->asset_name); ?></td>
+                <td scope="col" class="px6 py-2"><?php echo e($asset->category_id); ?></td>
+                <td scope="col" class="px6 py-2"><?php echo e($asset->stock); ?></td>
 
                 <!-- 貸出資産取得モーダル -->
                 <button id="openButton" onClick="document.getElementById('modalDialog').showModal()">モーダルを開く(貸出資産)</button>
@@ -318,10 +322,10 @@
                         </header>
                         <div>Message</div>
                         <form method="post" action="/assets/borrow">
-                            @csrf
+                            <?php echo csrf_field(); ?>
 
-                            <input type="submit" name="asset_id" value="{{ $asset->asset_id }}">
-                            <input type="submit" name="quantity" min="1" max="{{ $asset->stock }}" value="1" required>
+                            <input type="submit" name="asset_id" value="<?php echo e($asset->asset_id); ?>">
+                            <input type="submit" name="quantity" min="1" max="<?php echo e($asset->stock); ?>" value="1" required>
                             <button type="submit">はい</button>
                             <button type="button" onclick="document.getElementById('modalDialog').close()">いいえ</button>
                         </form>
@@ -340,18 +344,19 @@
                         </header>
                         <div>Message</div>
                         <form method="post" action="/assets/acquire">
-                            @csrf
+                            <?php echo csrf_field(); ?>
 
-                            <input type="hidden" name="asset_id" value="{{ $asset->asset_id }}">
-                            <input type="number" name="quantity" min="1" max="{{ $asset->stock }}" value="1" required>
+                            <input type="hidden" name="asset_id" value="<?php echo e($asset->asset_id); ?>">
+                            <input type="number" name="quantity" min="1" max="<?php echo e($asset->stock); ?>" value="1" required>
                             <button type="submit">はい</button>
                             <button type="button" onclick="document.getElementById('modalDialog').close()">いいえ</button>
                         </form>
                     </div>
                 </dialog>
-            @endforeach
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </tr>
     </table>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /var/www/html/resources/views/assets/index.blade.php ENDPATH**/ ?>
