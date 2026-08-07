@@ -57,7 +57,8 @@ class LoanHistory extends Model
                 'assets.asset_type',
                 'loan_categories.category_name'
             )
-            ->get();
+            ->paginate(10, ['*'], 'current_loan_page')
+            ->withQueryString();
     }
 
     /**
@@ -86,7 +87,8 @@ class LoanHistory extends Model
                 'assets.asset_type',
                 'loan_categories.category_name'
             )
-            ->paginate(10);
+            ->paginate(10, ['*'], 'past_loan_page')
+            ->withQueryString();
     }
 
     /**
@@ -94,12 +96,14 @@ class LoanHistory extends Model
      */
     public function returnAsset($loanHistoryId, $userId)
     {
+
         return LoanHistory::where('loan_history_id', $loanHistoryId)
             ->where('user_id', $userId)
             ->whereNull('return_date')
             ->update([
                 'return_date' => now(),
             ]);
+
     }
 
     // 貸与資産貸出処理
@@ -119,6 +123,28 @@ class LoanHistory extends Model
     {
         return LoanHistory::where('asset_id', $assetId)
             ->wherenull('return_date')
+            ->exists();
+    }
+    /**
+     * 期限超過警告メール
+     */
+    public function overdueUsers()
+    {
+        return LoanHistory::join('users', 'users.user_id', '=', 'loan_histories.user_id')
+            ->wherenull('return_date')
+            ->where('due_date', '<', today())
+            ->select('users.email', 'users.user_name', 'loan_histories.due_date')
+            ->get();
+    }
+
+    /**
+     * 7日以上返却期限を超過している貸出があるか
+     */
+    public function isLoanLocked($userId)
+    {
+        return LoanHistory::where('user_id', $userId)
+            ->wherenull('return_date')
+            ->where('due_date', '<=', today()->subDays(7))
             ->exists();
     }
 }

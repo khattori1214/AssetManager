@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UsageHistoryController extends Controller
 {
-    //利用履歴・返却画面
+    //利用履歴・返却画面一覧表示
     public function index()
     {
         $userId = Auth::id();
@@ -20,22 +20,35 @@ class UsageHistoryController extends Controller
         $consumablehistoryData = $consumablehistory->historyData($userId);
         $loanhistoryData = $loanhistory->historyData($userId);
         $pastloanhistoryData = $loanhistory->pasthistoryData($userId);
-        $historyData = $consumablehistory->historyData($userId);
+
         // 返却期限超過
         $overdueCount = $loanhistory->countOverdue($userId);
 
-        return view('histories.index', ['consumablehistoryData' => $consumablehistoryData, 'loanhistoryData' => $loanhistoryData, 'pastloanhistoryData' => $pastloanhistoryData, 'historyData' => $historyData, 'overdueCount' => $overdueCount]);
+        return view('histories.index', ['consumablehistoryData' => $consumablehistoryData, 'loanhistoryData' => $loanhistoryData, 'pastloanhistoryData' => $pastloanhistoryData, 'overdueCount' => $overdueCount]);
 
     }
 
-
+   
     public function returnAsset(Request $request)
     {
         $loanHistoryId = $request->input('loan_history_id');
+
         $loanhistory = new LoanHistory();
 
         $loanhistory->returnAsset($loanHistoryId, Auth::id());
-        return redirect('/histories');
+
+
+        $updated = $loanhistory->returnAsset(
+            $loanHistoryId,
+            Auth::id()
+        );
+
+        if ($updated) {
+            return redirect('/histories')
+                ->with('error', '返却が完了しました。');
+        }
+        return redirect('/histories')
+            ->with('error', '返却処理を実行できませんでした。');
     }
 
 }
