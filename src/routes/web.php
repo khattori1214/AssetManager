@@ -44,6 +44,7 @@ Route::post('/histories/return', [UsageHistoryController::class, 'returnAsset'])
 // 【管理者用】資産登録・在庫管理画面の表示
 
 Route::get('/admin', [AssetManagementController::class, 'index']);
+
 Route::post('/admin/assets', [AssetManagementController::class, 'store']);
 
 Route::get('/admin/assets/{id}/edit', [AssetManagementController::class, 'edit']);
@@ -52,4 +53,8 @@ Route::put('/admin/assets/{id}', [AssetManagementController::class, 'update']);
 Route::patch('/admin/assets/{id}/stock', [AssetManagementController::class, 'updateStock']);
 Route::delete('/admin/assets/{id}', [AssetManagementController::class, 'destroy']);
 
-Route::get('/admin/csv/{id}', [AssetManagementController::class, 'download']);
+
+// 経理連携用CSV出力バッチ処理
+Route::get('/admin/csv/download', [AssetManagementController::class, 'download']);
+
+

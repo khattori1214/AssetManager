@@ -6,6 +6,7 @@ use App\Models\Asset;
 use Illuminate\Http\Request;
 use App\Models\CsvFile;
 
+
 class AssetManagementController extends Controller
 {
     /**
@@ -15,14 +16,17 @@ class AssetManagementController extends Controller
     public function index()
     {
         $assetModel = new Asset();
-        $assetManagementData = $assetModel->assetData();
 
-        // $csvModel= new CsvFile();
-        // $csvData= $csvModel->csvData();
+        $loanAssetData = $assetModel->loanAssetData();
+        $consumableAssetData = $assetModel->consumableAssetData();
+
+        $csvModel = new CsvFile();
+        $csvData = $csvModel->csvData();
 
         return view('admin.index', [
-            'assetManagementData' => $assetManagementData,
-            // 'csvData'=>$csvData,
+            'loanAssetData' => $loanAssetData,
+            'consumableAssetData' => $consumableAssetData,
+            'csvData' => $csvData,
         ]);
     }
 
@@ -34,16 +38,19 @@ class AssetManagementController extends Controller
     {
         $registerAsset = $request->validate([
             'asset_name' => ['required', 'string', 'max:255'],
-            'category_id' => ['required', 'integer'],
+            'category_id' => ['integer'],
             'asset_type' => ['required', 'in:loan,consumable'],
             'stock' => ['nullable', 'integer', 'min:0'],
             'min_stock' => ['nullable', 'integer', 'min:0'],
+            'unit' => ['required', 'string', 'max:50'],
+            'max_request_quantity' => ['nullable', 'integer', 'min:1'],
+            'monthly_request_limit' => ['nullable', 'integer', 'min:1'],
         ]);
-
         $assetModel = new Asset();
         $assetModel->registerAsset($registerAsset);
 
-        return redirect('/admin');
+        return redirect('/admin')
+            ->with('success', '登録が完了しました。');
     }
 
     /**
@@ -52,9 +59,11 @@ class AssetManagementController extends Controller
      */
     public function destroy($id)
     {
-        Asset::where('asset_id', $id)->delete();
+        $assetModel = new Asset();
+        $assetModel->deleteAsset($id);
 
-        return redirect('/admin');
+        return redirect('/admin')
+            ->with('success', '削除が完了しました。');
     }
 
     /**
@@ -65,55 +74,24 @@ class AssetManagementController extends Controller
     {
         $validated = $request->validate([
             'stock' => ['required', 'integer', 'min:0'],
+            'min_stock' => ['required', 'integer', 'min:0'],
         ]);
 
-        Asset::where('asset_id', $id)->update([
-            'stock' => $validated['stock'],
-        ]);
+        $assetModel = new Asset();
+        $assetModel->updateConsumableStock($id, $validated);
 
-        return redirect('/admin');
+        return redirect('/admin')
+            ->with('success', '在庫情報を更新しました。');
     }
 
-    /**
-     * 管理者用画面
-     * 編集対象の資産情報を取得する
-     */
-    public function edit($id)
+
+    // 経理連携用CSVファイルをダウンロードする
+    public function download()
     {
-        $asset = Asset::where('asset_id', $id)->firstOrFail();
+        $csv = CsvFile::latest('generated_at')->firstOrFail();
 
-        return view('admin.edit', [
-            'asset' => $asset,
-        ]);
+        $path = storage_path('app/csv/' . $csv->file_name);
+
+        return response()->download($path, $csv->file_name);
     }
-
-    /**
-     * 管理者用画面
-     * 資産情報を更新する
-     */
-    public function update(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'asset_name' => ['required', 'string', 'max:255'],
-            'category_id' => ['required', 'integer'],
-            'asset_type' => ['required', 'in:loan,consumable'],
-            'stock' => ['nullable', 'integer', 'min:0'],
-            'min_stock' => ['nullable', 'integer', 'min:0'],
-        ]);
-
-        Asset::where('asset_id', $id)->update($validated);
-
-        return redirect('/admin');
-    }
-
-    /**
- * 管理者画面
- * CSVファイルをダウンロードする
- */
-// public function download($id)
-// {
-
-// }
-
-
 }
