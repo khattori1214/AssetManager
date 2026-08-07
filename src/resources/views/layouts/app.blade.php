@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <title>AssetManager</title>
 </head>
 
@@ -47,11 +50,11 @@
 
                 @if(Auth::user()->role_id == 1)
 
-                <li>
-                    <a href="/admin">
-                        資産登録・在庫管理
-                    </a>
-                </li>
+                    <li>
+                        <a href="/admin">
+                            資産登録・在庫管理
+                        </a>
+                    </li>
 
                 @endif
 
@@ -62,6 +65,30 @@
         <!-- 各画面 -->
         <main style="flex:1">
 
+            {{-- 成功メッセージ --}}
+            @if (session('success'))
+                <div class="message success-message">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            {{-- エラーメッセージ --}}
+            @if (session('error'))
+                <div class="message error-message">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            {{-- バリデーションエラー --}}
+            @if ($errors->any())
+                <div class="message error-message">
+                    @foreach ($errors->all() as $error)
+                        <p>{{ $error }}</p>
+                    @endforeach
+                </div>
+            @endif
+
+
             @yield('content')
 
         </main>
@@ -69,4 +96,5 @@
     </div>
 
 </body>
+
 </html>

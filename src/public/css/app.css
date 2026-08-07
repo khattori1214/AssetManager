@@ -100,3 +100,326 @@ body {
     animation-duration: 200ms;
     animation-timing-function: ease-out;
 }
+
+.pagination-wrapper svg {
+    width: 20px;
+    height: 20px;
+}
+
+.pagination-wrapper nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pagination-wrapper nav>div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pagination-wrapper ul {
+    display: flex;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination {
+    display: flex !important;
+    gap: 8px;
+    list-style: none !important;
+    padding: 0 !important;
+}
+
+.pagination li {
+    display: inline-block !important;
+}
+
+/* 003～005 共通：画面内容 */
+.content-area {
+    background-color: #ffffff;
+    border: 1px solid #999999;
+    padding: 20px;
+    margin: 20px;
+}
+
+/* 見出し */
+.content-area h1 {
+    margin-top: 0;
+}
+
+.content-area h2 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+/* テーブル */
+.content-area table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+}
+
+.content-area th,
+.content-area td {
+    border: 1px solid #999999;
+    padding: 10px;
+    text-align: left;
+}
+
+.content-area th {
+    background-color: #eeeeee;
+}
+
+/* ボタン */
+.content-area button {
+    padding: 7px 14px;
+    cursor: pointer;
+}
+
+/* 入力欄 */
+.content-area input,
+.content-area select {
+    padding: 7px;
+}
+
+/* ダイアログ */
+.content-area dialog {
+    width: 450px;
+    padding: 25px;
+    border: 1px solid #999999;
+    border-radius: 5px;
+}
+
+.content-area dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.message {
+    margin: 20px;
+    padding: 12px 16px;
+    border-radius: 4px;
+}
+
+.success-message {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.error-message {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+/* ===== 画面共通 ===== */
+
+body {
+    margin: 0;
+    color: #1f2937;
+    font-family:
+        "Segoe UI",
+        "Noto Sans JP",
+        sans-serif;
+    background: #f3f6fa;
+}
+
+.content-area {
+    max-width: 1400px;
+    margin: 32px auto;
+    padding: 32px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.07);
+}
+
+.content-area h1 {
+    margin: 0 0 32px;
+    padding-bottom: 16px;
+    color: #172554;
+    font-size: 30px;
+    border-bottom: 3px solid #2563eb;
+}
+
+.content-area h2 {
+    margin: 36px 0 16px;
+    color: #1e3a5f;
+    font-size: 22px;
+}
+
+/* ===== 検索欄 ===== */
+
+.box {
+    margin-bottom: 32px;
+    padding: 24px;
+    background: #f8fafc;
+    border: 1px solid #dbe3ee;
+    border-radius: 10px;
+}
+
+.box h2 {
+    margin-top: 0;
+}
+
+.box form>div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.box label {
+    width: 90px;
+    font-weight: 600;
+}
+
+input,
+select {
+    box-sizing: border-box;
+    padding: 9px 12px;
+    font-size: 15px;
+    background: #ffffff;
+    border: 1px solid #b8c2d1;
+    border-radius: 6px;
+}
+
+input:focus,
+select:focus {
+    border-color: #2563eb;
+    outline: 3px solid rgba(37, 99, 235, 0.15);
+}
+
+/* ===== ボタン ===== */
+
+button {
+    padding: 9px 18px;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #2563eb;
+    border: none;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+button:hover:not(:disabled) {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    color: #94a3b8;
+    cursor: not-allowed;
+    background: #e2e8f0;
+}
+
+/* ===== テーブル ===== */
+
+.content-area table {
+    width: 100%;
+    margin-bottom: 16px;
+    overflow: hidden;
+    background: #ffffff;
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #dbe3ee;
+    border-radius: 8px;
+}
+
+.content-area th {
+    padding: 14px 16px;
+    color: #ffffff;
+    text-align: left;
+    background: #1e3a5f;
+    border: none;
+}
+
+.content-area td {
+    padding: 14px 16px;
+    border: none;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.content-area tr:last-child td {
+    border-bottom: none;
+}
+
+.content-area tbody tr:hover {
+    background: #f1f5f9;
+}
+
+/* ===== メッセージ ===== */
+
+.success-message,
+.error-message {
+    margin-bottom: 20px;
+    padding: 14px 18px;
+    border-radius: 8px;
+}
+
+.success-message {
+    color: #166534;
+    background: #dcfce7;
+    border: 1px solid #86efac;
+}
+
+.error-message {
+    color: #991b1b;
+    background: #fee2e2;
+    border: 1px solid #fca5a5;
+}
+
+/* ===== ページング ===== */
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0 36px;
+}
+
+.pagination {
+    display: flex !important;
+    gap: 6px;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+.pagination a,
+.pagination span {
+    display: inline-flex;
+    min-width: 36px;
+    height: 36px;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+    color: #1e3a5f;
+    text-decoration: none;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+.pagination .active span {
+    color: #ffffff;
+    background: #2563eb;
+    border-color: #2563eb;
+}
+
+/* ===== ダイアログ ===== */
+
+dialog {
+    width: min(420px, 90%);
+    padding: 28px;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.3);
+}
+
+dialog::backdrop {
+    background: rgba(15, 23, 42, 0.55);
+}
