@@ -1,150 +1,123 @@
 <?php $__env->startSection('content'); ?>
-    <h1>資産一覧・申請画面</h1>
+    <div class="content-area">
 
-    
-    <?php if(session('success')): ?>
-        <div>
-            <?php echo e(session('success')); ?>
+        <h1>資産一覧・申請画面</h1>
 
-        </div>
-    <?php endif; ?>
-
-    
-    <?php if(session('error')): ?>
-        <div>
-            <?php echo e(session('error')); ?>
-
-        </div>
-    <?php endif; ?>
-
-    
-    <?php if($errors->any()): ?>
-        <div>
-            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <p><?php echo e($error); ?></p>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-        </div>
-    <?php endif; ?>
-
-    
-    <?php if($isLocked ?? false): ?>
-        <div>
-            【警告】返却期限を7日以上過ぎている資産があります。
-        </div>
-    <?php endif; ?>
-
-    
-    <div class="box">
-        <form action="/assets/search" method="get">
-            <h2>検索条件</h2>
-
+        
+        <?php if(session('success')): ?>
             <div>
-                <label for="keyword">資産名</label>
+                <?php echo e(session('success')); ?>
 
-                <input type="text" id="keyword" name="keyword" value="<?php echo e(request('keyword')); ?>" placeholder="例:PC">
             </div>
+        <?php endif; ?>
 
+        
+        <?php if(session('error')): ?>
             <div>
-                <label for="asset_type">資産種別</label>
+                <?php echo e(session('error')); ?>
 
-                <select id="asset_type" name="asset_type">
-                    <option value="">すべて</option>
-
-                    <option value="loan" <?php if(request('asset_type') === 'loan'): echo 'selected'; endif; ?>>
-                        貸出資産
-                    </option>
-
-                    <option value="consumable" <?php if(request('asset_type') === 'consumable'): echo 'selected'; endif; ?>>
-                        消耗品
-                    </option>
-                </select>
             </div>
+        <?php endif; ?>
 
-            <button type="submit" id="searchBtn">
-                検索
-            </button>
-        </form>
-    </div>
+        
+        <?php if($errors->any()): ?>
+            <div>
+                <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <p><?php echo e($error); ?></p>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </div>
+        <?php endif; ?>
 
-    
-    <h2>貸出資産一覧</h2>
+        
+        <?php if(($overdueCount ?? 0) > 0): ?>
+            <div class="error-message">
+                【警告】返却期限を過ぎている資産があります
+                （<?php echo e($overdueCount); ?>件）。
+            </div>
+        <?php endif; ?>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>NO.</th>
-                <th>資産名</th>
-                <th>カテゴリ</th>
-                <th>状態</th>
-                <th>最大貸出期間</th>
-                <th>操作</th>
-            </tr>
-        </thead>
+        
+        <div class="box">
+            <form action="/assets" method="get">
+                <h2>検索条件</h2>
 
-        <tbody>
-            <?php
-                $loanAssetExists = false;
-            ?>
+                <div>
+                    <label for="keyword">資産名</label>
 
-            <?php $__currentLoopData = $assetData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $asset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <?php if($asset->asset_type === 'loan'): ?>
-                    <?php
-                        $loanAssetExists = true;
+                    <input type="text" id="keyword" name="keyword" value="<?php echo e(request('keyword')); ?>" placeholder="例:PC">
+                </div>
 
-                        $loanHistory = new \App\Models\LoanHistory();
+                <div>
+                    <label for="asset_type">資産種別</label>
 
-                        $isBorrowed = $loanHistory->isBorrowed(
-                            $asset->asset_id
-                        );
-                    ?>
+                    <select id="asset_type" name="asset_type">
+                        <option value="">すべて</option>
 
+                        <option value="loan" <?php if(request('asset_type') === 'loan'): echo 'selected'; endif; ?>>
+                            貸出資産
+                        </option>
+
+                        <option value="consumable" <?php if(request('asset_type') === 'consumable'): echo 'selected'; endif; ?>>
+                            消耗品
+                        </option>
+                    </select>
+                </div>
+
+                <button type="submit" id="searchBtn">
+                    検索
+                </button>
+            </form>
+        </div>
+
+        
+        <h2>貸出資産一覧</h2>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>NO.</th>
+                    <th>資産名</th>
+                    <th>カテゴリ</th>
+                    <th>状態</th>
+                    <th>最大貸出期間</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <?php $__empty_1 = true; $__currentLoopData = $loanAssetData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $asset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
                         <td><?php echo e($asset->asset_id); ?></td>
-
                         <td><?php echo e($asset->asset_name); ?></td>
+                        <td><?php echo e($asset->category_name); ?></td>
 
                         <td>
-                            <?php echo e($asset->category_name); ?>
-
-                        </td>
-
-                        <td>
-                            <?php if($isBorrowed): ?>
+                            <?php if($asset->is_borrowed): ?>
                                 貸出中
                             <?php else: ?>
                                 利用可能
                             <?php endif; ?>
                         </td>
 
-                        <td>
-                            <?php echo e($asset->max_loan_days); ?>日
-                        </td>
+                        <td><?php echo e($asset->max_loan_days); ?>日</td>
 
                         <td>
-                            <button type="button" onclick="
-                                            document
-                                                .getElementById(
-                                                    'borrowModal<?php echo e($asset->asset_id); ?>'
-                                                )
-                                                .showModal()
-                                        " <?php if(
-                                            $isBorrowed ||
-                                            ($isLocked ?? false)
-                                        ): echo 'disabled'; endif; ?>>
-                                <?php if($isBorrowed): ?>
+                            <button type="button"
+                                onclick="document.getElementById('borrowModal<?php echo e($asset->asset_id); ?>').showModal()"
+                                <?php if($asset->is_borrowed || $isLocked): echo 'disabled'; endif; ?>>
+
+                                <?php if($asset->is_borrowed): ?>
                                     貸出中
                                 <?php else: ?>
                                     貸出
                                 <?php endif; ?>
                             </button>
 
-                            
-                            <dialog id="borrowModal<?php echo e($asset->asset_id); ?>" class="dialog">
+                            <dialog id="borrowModal<?php echo e($asset->asset_id); ?>">
                                 <h2>貸出確認</h2>
 
                                 <p>
-                                    「<?php echo e($asset->asset_name); ?>」を
-                                    貸し出しますか？
+                                    「<?php echo e($asset->asset_name); ?>」を貸し出しますか？
                                 </p>
 
                                 <form method="post" action="/assets/borrow">
@@ -152,76 +125,51 @@
 
                                     <input type="hidden" name="asset_id" value="<?php echo e($asset->asset_id); ?>">
 
-                                    <button type="submit">
-                                        はい
-                                    </button>
+                                    <button type="submit">はい</button>
 
-                                    <button type="button" onclick="
-                                                    document
-                                                        .getElementById(
-                                                            'borrowModal<?php echo e($asset->asset_id); ?>'
-                                                        )
-                                                        .close()
-                                                ">
+                                    <button type="button"
+                                        onclick="document.getElementById('borrowModal<?php echo e($asset->asset_id); ?>').close()">
                                         いいえ
                                     </button>
                                 </form>
                             </dialog>
                         </td>
                     </tr>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                    <tr>
+                        <td colspan="6">貸出資産はありません。</td>
+                    </tr>
                 <?php endif; ?>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </tbody>
+        </table>
 
-            <?php if(!$loanAssetExists): ?>
+        <div class="pagination-wrapper">
+            <?php echo e($loanAssetData->links('pagination::bootstrap-4')); ?>
+
+        </div>
+
+        
+        <h2>消耗品一覧</h2>
+
+        <table border="1">
+            <thead>
                 <tr>
-                    <td colspan="6">
-                        貸出資産はありません。
-                    </td>
+                    <th>NO.</th>
+                    <th>品名</th>
+                    <th>カテゴリ</th>
+                    <th>在庫数</th>
+                    <th>状態</th>
+                    <th>操作</th>
                 </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
+            </thead>
 
-    
-    <h2>消耗品一覧</h2>
-
-    <table border="1">
-        <thead>
-            <tr>
-                <th>NO.</th>
-                <th>品名</th>
-                <th>カテゴリ</th>
-                <th>在庫数</th>
-                <th>状態</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <?php
-                $consumableExists = false;
-            ?>
-
-            <?php $__currentLoopData = $assetData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $asset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <?php if($asset->asset_type === 'consumable'): ?>
-                    <?php
-                        $consumableExists = true;
-                    ?>
-
+            <tbody>
+                <?php $__empty_1 = true; $__currentLoopData = $consumableAssetData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $asset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <tr>
                         <td><?php echo e($asset->asset_id); ?></td>
-
                         <td><?php echo e($asset->asset_name); ?></td>
-
-                        <td>
-                            <?php echo e($asset->category_name); ?>
-
-                        </td>
-
-                        <td>
-                            <?php echo e($asset->stock); ?>
-
-                        </td>
+                        <td><?php echo e($asset->category_name); ?></td>
+                        <td><?php echo e($asset->stock); ?></td>
 
                         <td>
                             <?php if($asset->stock < $asset->min_stock): ?>
@@ -232,26 +180,17 @@
                         </td>
 
                         <td>
-                            <button type="button" onclick="
-                                            document
-                                                .getElementById(
-                                                    'acquireModal<?php echo e($asset->asset_id); ?>'
-                                                )
-                                                .showModal()
-                                        " <?php if(
-                                            $asset->stock <= 0 ||
-                                            ($isLocked ?? false)
-                                        ): echo 'disabled'; endif; ?>>
+                            <button type="button"
+                                onclick="document.getElementById('acquireModal<?php echo e($asset->asset_id); ?>').showModal()"
+                                <?php if($asset->stock <= 0): echo 'disabled'; endif; ?>>
                                 取得
                             </button>
 
-                            
-                            <dialog id="acquireModal<?php echo e($asset->asset_id); ?>" class="dialog">
+                            <dialog id="acquireModal<?php echo e($asset->asset_id); ?>">
                                 <h2>取得数量入力</h2>
 
                                 <p>
-                                    「<?php echo e($asset->asset_name); ?>」の
-                                    取得数量を入力してください。
+                                    「<?php echo e($asset->asset_name); ?>」の取得数量を入力してください。
                                 </p>
 
                                 <form method="post" action="/assets/acquire">
@@ -268,36 +207,30 @@
                                             max="<?php echo e($asset->stock); ?>" value="1" required>
                                     </div>
 
-                                    <button type="submit">
-                                        はい
-                                    </button>
+                                    <button type="submit">はい</button>
 
-                                    <button type="button" onclick="
-                                                    document
-                                                        .getElementById(
-                                                            'acquireModal<?php echo e($asset->asset_id); ?>'
-                                                        )
-                                                        .close()
-                                                ">
+                                    <button type="button"
+                                        onclick="document.getElementById('acquireModal<?php echo e($asset->asset_id); ?>').close()">
                                         いいえ
                                     </button>
                                 </form>
                             </dialog>
                         </td>
                     </tr>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                    <tr>
+                        <td colspan="6">消耗品はありません。</td>
+                    </tr>
                 <?php endif; ?>
-            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+            </tbody>
 
-            <?php if(!$consumableExists): ?>
-                <tr>
-                    <td colspan="6">
-                        消耗品はありません。
-                    </td>
-                </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
+        </table>
 
-       
+        <div class="pagination-wrapper">
+            <?php echo e($consumableAssetData->links('pagination::bootstrap-4')); ?>
+
+        </div>
+    </div>
+
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH /var/www/html/resources/views/assets/index.blade.php ENDPATH**/ ?>

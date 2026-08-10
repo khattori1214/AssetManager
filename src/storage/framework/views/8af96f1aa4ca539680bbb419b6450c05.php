@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>">
     <title>AssetManager</title>
 </head>
 
@@ -48,11 +51,11 @@
 
                 <?php if(Auth::user()->role_id == 1): ?>
 
-                <li>
-                    <a href="/admin">
-                        資産登録・在庫管理
-                    </a>
-                </li>
+                    <li>
+                        <a href="/admin">
+                            資産登録・在庫管理
+                        </a>
+                    </li>
 
                 <?php endif; ?>
 
@@ -63,6 +66,32 @@
         <!-- 各画面 -->
         <main style="flex:1">
 
+            
+            <?php if(session('success')): ?>
+                <div class="message success-message">
+                    <?php echo e(session('success')); ?>
+
+                </div>
+            <?php endif; ?>
+
+            
+            <?php if(session('error')): ?>
+                <div class="message error-message">
+                    <?php echo e(session('error')); ?>
+
+                </div>
+            <?php endif; ?>
+
+            
+            <?php if($errors->any()): ?>
+                <div class="message error-message">
+                    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <p><?php echo e($error); ?></p>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </div>
+            <?php endif; ?>
+
+
             <?php echo $__env->yieldContent('content'); ?>
 
         </main>
@@ -70,4 +99,5 @@
     </div>
 
 </body>
+
 </html><?php /**PATH /var/www/html/resources/views/layouts/app.blade.php ENDPATH**/ ?>

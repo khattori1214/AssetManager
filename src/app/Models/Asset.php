@@ -41,40 +41,6 @@ class Asset extends Model
             ->paginate(10);
     }
 
-    /**
-     * 資産一覧・申請画面
-     * 資産名・種別で検索する
-     */
-    public function search($keyword, $assetType)
-    {
-        $query = Asset::leftJoin(
-            'loan_categories',
-            'assets.category_id',
-            '=',
-            'loan_categories.category_id'
-        )
-            ->select(
-                'assets.*',
-                'loan_categories.category_name',
-                'loan_categories.max_loan_days'
-            );
-
-        if (!empty($keyword)) {
-            $query->where(
-                'assets.asset_name',
-                'like',
-                '%' . $keyword . '%'
-            );
-        }
-
-        if (!empty($assetType)) {
-            $query->where('assets.asset_type', $assetType);
-        }
-
-        return $query
-            ->paginate(10)
-            ->withQueryString();
-    }
 
     /**
      * 資産一覧・申請画面

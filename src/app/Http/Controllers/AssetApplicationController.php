@@ -45,29 +45,6 @@ class AssetApplicationController extends Controller
     }
 
 
-    /**
-     * 資産名による検索処理
-     */
-    public function search(Request $request)
-    {
-        $keyword = $request->input('keyword');
-        $assetType = $request->input('asset_type');
-        $asset = new Asset();
-        $assetData = $asset->search($keyword, $assetType);
-
-        $loanhistory = new LoanHistory();
-        $isLocked = $loanhistory->isLoanLocked(Auth::id());
-        foreach ($assetData as $asset) {
-            if ($asset->asset_type === 'loan') {
-                $asset->is_borrowed =
-                    $loanhistory->isBorrowed($asset->asset_id);
-            }
-        }
-
-        return view('assets.index', ['assetData' => $assetData, 'keyword' => $keyword, 'assetType' => $assetType, 'isLocked' => $isLocked]);
-    }
-
-
     public function acquire(Request $request)
     {
         $assetModel = new Asset();
