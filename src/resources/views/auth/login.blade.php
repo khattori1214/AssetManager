@@ -28,7 +28,7 @@
         @enderror
 
         <br>
-        <label>password</label>
+        <label>パスワード</label>
         <br>
         <input type="password" id="password" name="password">
         @error('password')

@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}">
     <title>AssetManager</title>
 </head>
 
 <body>
 
     <!-- 上部ヘッダー -->
-    <header>
+    <header class="app-header">
 
         <h2>AssetManager</h2>
 
@@ -27,12 +27,9 @@
 
     </header>
 
-    <hr>
-
-    <div style="display:flex;">
-
+    <div class="app-body">
         <!-- 左メニュー -->
-        <aside style="width:220px">
+        <aside class="sidebar">
 
             <ul>
 
@@ -52,7 +49,7 @@
 
                     <li>
                         <a href="/admin">
-                            資産登録・在庫管理
+                            資産登録・在庫管理【管理者のみ】
                         </a>
                     </li>
 
@@ -63,7 +60,7 @@
         </aside>
 
         <!-- 各画面 -->
-        <main style="flex:1">
+        <main class="main-content">
 
             {{-- 成功メッセージ --}}
             @if (session('success'))

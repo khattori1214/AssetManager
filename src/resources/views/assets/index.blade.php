@@ -109,15 +109,23 @@
                                 @if ($asset->is_borrowed)
                                     貸出中
                                 @else
-                                    貸出
+                                    借りる
                                 @endif
                             </button>
+
+                            {{-- ロック理由だけボタンの外に表示 --}}
+                            @if (!$asset->is_borrowed && $isLocked)
+                                <p class="disabled-reason">
+                                    返却期限を7日以上超過しているため借りることができません。
+                                </p>
+                            @endif
+
 
                             <dialog id="borrowModal{{ $asset->asset_id }}">
                                 <h2>貸出確認</h2>
 
                                 <p>
-                                    「{{ $asset->asset_name }}」を貸し出しますか？
+                                    「{{ $asset->asset_name }}」を借りますか？
                                 </p>
 
                                 <form method="post" action="/assets/borrow">
@@ -125,11 +133,11 @@
 
                                     <input type="hidden" name="asset_id" value="{{ $asset->asset_id }}">
 
-                                    <button type="submit">はい</button>
+                                    <button type="submit">借りる</button>
 
                                     <button type="button"
                                         onclick="document.getElementById('borrowModal{{ $asset->asset_id }}').close()">
-                                        いいえ
+                                        キャンセル
                                     </button>
                                 </form>
                             </dialog>
@@ -182,7 +190,7 @@
                             <button type="button"
                                 onclick="document.getElementById('acquireModal{{ $asset->asset_id }}').showModal()"
                                 @disabled($asset->stock <= 0)>
-                                取得
+                                取得する
                             </button>
 
                             <dialog id="acquireModal{{ $asset->asset_id }}">
@@ -206,11 +214,11 @@
                                             max="{{ $asset->stock }}" value="1" required>
                                     </div>
 
-                                    <button type="submit">はい</button>
+                                    <button type="submit">取得する</button>
 
                                     <button type="button"
                                         onclick="document.getElementById('acquireModal{{ $asset->asset_id }}').close()">
-                                        いいえ
+                                        キャンセル
                                     </button>
                                 </form>
                             </dialog>

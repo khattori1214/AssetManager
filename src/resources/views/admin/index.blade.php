@@ -18,11 +18,11 @@
 
         <h1>資産登録・在庫管理画面</h1>
         <button type="button" onclick="document.getElementById('loanRegisterModal').showModal()">
-            貸出資産を新規登録
+            貸出資産を登録する
         </button>
 
         <button type="button" onclick="document.getElementById('consumableRegisterModal').showModal()">
-            消耗品を新規登録
+            消耗品を登録する
         </button>
         <h2>貸出資産一覧</h2>
 
@@ -47,7 +47,7 @@
                     <td>
 
                         <button type="button" onclick="openDeleteModal('{{ $asset->asset_id }}', '{{ $asset->asset_name }}')">
-                            削除
+                            削除する
                         </button>
                     </td>
                 </tr>
@@ -88,15 +88,12 @@
                     <td>
                         <button type="button"
                             onclick="document.getElementById('stockModal-{{ $asset->asset_id }}').showModal()">
-                            在庫更新
+                            在庫を更新する
                         </button>
 
-                        <form action="/admin/assets/{{ $asset->asset_id }}" method="post" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-
-                            <button type="submit">削除</button>
-                        </form>
+                        <button type="button" onclick="openDeleteModal('{{ $asset->asset_id }}', '{{ $asset->asset_name }}')">
+                            削除する
+                        </button>
                     </td>
                 </tr>
             @endforeach
@@ -109,7 +106,7 @@
         <!-- 消耗品在庫更新ダイアログ -->
         @foreach ($consumableAssetData as $asset)
             <dialog id="stockModal-{{ $asset->asset_id }}">
-                <h2>消耗品在庫更新</h2>
+                <h2>消耗品の在庫を更新する</h2>
 
                 <form action="/admin/assets/{{ $asset->asset_id }}/stock" method="post">
                     @csrf
@@ -142,11 +139,13 @@
                         {{ $asset->monthly_request_limit }}（変更不可）
                     </p>
 
+
+                    <button type="submit">更新する</button>
+
                     <button type="button" onclick="document.getElementById('stockModal-{{ $asset->asset_id }}').close()">
                         キャンセル
                     </button>
 
-                    <button type="submit">登録する</button>
                 </form>
             </dialog>
         @endforeach
@@ -154,7 +153,7 @@
 
 
         <dialog id="loanRegisterModal">
-            <h2>貸出資産登録</h2>
+            <h2>貸出資産を登録する</h2>
 
             <form action="/admin/assets" method="post">
                 @csrf
@@ -187,16 +186,16 @@
                     </select>
                 </div>
 
-                <button type="submit">登録</button>
+                <button type="submit">登録する</button>
 
                 <button type="button" onclick="document.getElementById('loanRegisterModal').close()">
-                    閉じる
+                    キャンセル
                 </button>
             </form>
         </dialog>
 
         <dialog id="consumableRegisterModal">
-            <h2>消耗品登録</h2>
+            <h2>消耗品を登録する</h2>
 
             <form action="/admin/assets" method="post">
                 @csrf
@@ -240,18 +239,18 @@
                     <input type="number" name="monthly_request_limit" min="1">
                 </div>
 
-                <button type="submit">登録</button>
+                <button type="submit">登録する</button>
 
                 <button type="button" onclick="document.getElementById('consumableRegisterModal').close()">
-                    閉じる
+                    キャンセル
                 </button>
             </form>
         </dialog>
 
 
-        <h3>経理連携用CSVファイル</h3>
+        <h2>経理連携用CSVファイル</h2>
         <a href="/admin/csv/download">
-            CSVをダウンロード
+            経理連携用CSVをダウンロード
         </a>
 
 
@@ -266,13 +265,14 @@
                 @csrf
                 @method('DELETE')
 
+                <button type="submit">
+                    削除する
+                </button>
+
                 <button type="button" onclick="document.getElementById('deleteModal').close()">
                     キャンセル
                 </button>
 
-                <button type="submit">
-                    はい
-                </button>
             </form>
         </dialog>
 

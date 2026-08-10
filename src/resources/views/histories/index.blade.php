@@ -4,18 +4,6 @@
 
     <div class="content-area">
 
-        @if (session('success'))
-            <div class="success-message">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="error-message">
-                {{ session('error') }}
-            </div>
-        @endif
-
         @if ($overdueCount > 0)
             <div class="error-message">
                 【警告】返却期限を過ぎている資産があります（{{ $overdueCount }}件）。
@@ -32,6 +20,7 @@
                 <th>カテゴリ</th>
                 <th>種別</th>
                 <th>貸出日</th>
+                <th>返却期限</th>
                 <th>状態</th>
                 <th>操作</th>
             </tr>
@@ -41,8 +30,9 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $history->asset_name }}</td>
                     <td>{{ $history->category_name }}</td>
-                    <td>{{ $history->asset_type }}</td>
+                    <td>貸出資産</td>
                     <td>{{ $history->loan_date }}</td>
+                    <td>{{ $history->due_date }}</td>
 
                     <td>
                         @if ($history->due_date < today())
@@ -56,7 +46,7 @@
                         <!-- 返却ボタン -->
                         <button type="button"
                             onclick="document.getElementById('returnModal{{ $history->loan_history_id }}').showModal()">
-                            返却
+                            返却する
                         </button>
 
 
@@ -78,7 +68,7 @@
 
                                 <button type="button"
                                     onclick="document.getElementById('returnModal{{ $history->loan_history_id }}').close()">
-                                    いいえ
+                                    キャンセル
                                 </button>
                             </form>
                         </dialog>
@@ -86,7 +76,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7">
+                    <td colspan="8">
                         現在貸出中の資産はありません。
                     </td>
                 </tr>
@@ -126,7 +116,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $history->asset_name }}</td>
                     <td>{{ $history->category_name }}</td>
-                    <td>{{ $history->asset_type }}</td>
+                    <td>貸出資産</td>
                     <td>{{ $history->loan_date }}</td>
                     <td>{{ $history->return_date }}</td>
                     <td>返却済</td>
@@ -139,7 +129,7 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $history->asset_name }}</td>
                     <td>{{ $history->category_name ?? '-' }}</td>
-                    <td>{{ $history->asset_type }}</td>
+                    <td>消耗品</td>
                     <td>{{ $history->request_date }}</td>
                     <td>{{ $history->quantity }} {{ $history->unit }}</td>
                     <td>取得済</td>
