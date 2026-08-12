@@ -22,7 +22,7 @@ class LoginController extends Controller
         }
         return back()->withErrors([
             'login' => '社員番号IDまたはパスワードが正しくありません',
-        ])->onlyInput('employee_no');
+        ]);
     }
 
     public function logout(Request $request)
