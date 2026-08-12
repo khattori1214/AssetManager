@@ -4,7 +4,7 @@
 
     <div class="content-area">
 
-        @if (($overdueCount ?? 0) > 0)
+        @if ($overdueCount > 0)
             <div class="error-message">
                 【警告】返却期限を過ぎている資産があります
                 （{{ $overdueCount }}件）。
