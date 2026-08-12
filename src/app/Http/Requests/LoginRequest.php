@@ -42,8 +42,12 @@ class LoginRequest extends FormRequest
     {
         return [
             'employee_no.required' => '社員番号IDを入力してください',
-            'password.required' => 'パスワードを入力してください'
-
+            'employee_no.max' => '社員番号IDは半角英数字32文字以内で入力してください。',
+            'employee_no.regex' => '社員番号IDは半角英数字32文字以内で入力してください。',
+            'password.required' => 'パスワードを入力してください',
+            'password.min' => 'パスワードは8文字以上128文字以内で、半角英字・半角数字・記号をそれぞれ1文字以上含めてください。',
+            'password.max' => 'パスワードは8文字以上128文字以内で、半角英字・半角数字・記号をそれぞれ1文字以上含めてください。',
+            'password.regex' => 'パスワードは8文字以上128文字以内で、半角英字・半角数字・記号をそれぞれ1文字以上含めてください。',
         ];
     }
 
