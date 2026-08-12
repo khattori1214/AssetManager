@@ -13,16 +13,19 @@
     <!-- 上部ヘッダー -->
     <header class="app-header">
 
-        <h2>AssetManager</h2>
+        <h2>AssetManager-社内資産・備品管理システム-</h2>
 
         <div>
             ログイン中：
             {{ Auth::user()->user_name }}
         </div>
 
-        <form action="/logout" method="post">
+        <form action="/logout" method="POST" class="logout-form">
             @csrf
-            <button>ログアウト</button>
+
+            <button type="submit" class="logout-button">
+                ログアウト
+            </button>
         </form>
 
     </header>
@@ -32,6 +35,12 @@
         <aside class="sidebar">
 
             <ul>
+
+                <li>
+                    <a href="/top">
+                        トップ画面
+                    </a>
+                </li>
 
                 <li>
                     <a href="/assets">
@@ -49,7 +58,7 @@
 
                     <li>
                         <a href="/admin">
-                            資産登録・在庫管理【管理者のみ】
+                            資産登録・在庫管理<br>【管理者のみ】
                         </a>
                     </li>
 

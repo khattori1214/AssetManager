@@ -4,13 +4,16 @@
 
     <div class="content-area">
 
-        @if ($overdueCount > 0)
+        @if (($overdueCount ?? 0) > 0)
             <div class="error-message">
-                【警告】返却期限を過ぎている資産があります（{{ $overdueCount }}件）。
+                【警告】返却期限を過ぎている資産があります
+                （{{ $overdueCount }}件）。
             </div>
         @endif
 
-        <h1>利用履歴・返却画面</h1>
+        <a href="/histories" class="{{ request()->is('histories*') ? 'active' : '' }}">
+            <h1>利用履歴・返却画面</h1>
+        </a>
 
         <h2>現在借りている資産</h2>
         <table border="1">

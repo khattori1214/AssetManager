@@ -2,8 +2,9 @@
 
 @section('content')
     <div class="content-area">
-
-        <h1>資産一覧・申請画面</h1>
+        <a href="/assets" class="{{ request()->is('assets*') ? 'active' : '' }}">
+            <h1>資産一覧・申請画面</h1>
+        </a>
 
         {{-- 成功メッセージ --}}
         @if (session('success'))
@@ -163,7 +164,6 @@
                 <tr>
                     <th>NO.</th>
                     <th>品名</th>
-                    <th>カテゴリ</th>
                     <th>在庫数</th>
                     <th>状態</th>
                     <th>操作</th>
@@ -175,7 +175,6 @@
                     <tr>
                         <td>{{ $asset->asset_id }}</td>
                         <td>{{ $asset->asset_name }}</td>
-                        <td>{{ $asset->category_name }}</td>
                         <td>{{ $asset->stock }}</td>
 
                         <td>

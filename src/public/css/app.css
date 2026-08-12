@@ -1,13 +1,210 @@
-/* ログイン画面 */
-
+/* ログイン画面全体 */
 .login-page {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
     min-height: 100vh;
     margin: 0;
+    padding: 24px;
+    box-sizing: border-box;
+
+    display: grid;
+    place-items: center;
+
+    color: #ffffff;
+
+    background: linear-gradient(180deg,
+            #17208a 0%,
+            #2563c7 55%,
+            #4aa9ed 100%);
+}
+
+/* ログアウトフォーム */
+.app-header .logout-form {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+}
+
+/* ログアウトボタン */
+.app-header .logout-button {
+    padding: 10px 20px;
+
+    color: #1e40af;
+    background: #ffffff;
+    border: 0;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
+
+    font-weight: 700;
+}
+
+.app-header .logout-button:hover:not(:disabled) {
+    color: #172554;
+    background: #dbeafe;
+    transform: translateY(-1px);
+}
+
+.app-header .logout-button:active:not(:disabled) {
+    background: #bfdbfe;
+    transform: translateY(1px);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.16);
+}
+
+.app-header .logout-button:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: 3px;
+}
+
+/* フォーム領域 */
+.login-card {
+    width: min(100%, 380px);
+    padding: 32px;
+    box-sizing: border-box;
+
+    /* 白いカードをなくす */
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* タイトル */
+.login-card h1 {
+    margin: 0;
+    text-align: center;
+    color: #ffffff;
+    font-size: 40px;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+}
+
+.login-subtitle {
+    margin: 8px 0 36px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+/* フォーム */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+/* 入力欄 */
+.form-group input {
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 4px;
+    box-sizing: border-box;
+
+    color: #ffffff;
+    font: inherit;
+    background: transparent;
+
+    border: 0;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.6);
+    border-radius: 0;
+    outline: none;
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.form-group input:focus {
+    border-bottom-color: #ffffff;
+    box-shadow: 0 2px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* パスワード欄 */
+.password-field {
+    position: relative;
+}
+
+.password-field input {
+    padding-right: 70px;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+
+    padding: 6px 8px;
+
+    color: #ffffff;
+    font-weight: 600;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+/* ログインボタン */
+.login-button {
+    width: 100%;
+    min-height: 48px;
+    margin-top: 8px;
+
+    color: #172554;
+    font-weight: 700;
+    font-size: 16px;
+
+    background: #ffffff;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.2);
+
+    transition:
+        transform 0.15s ease,
+        background-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.login-button:hover {
+    background-color: #eff6ff;
+    box-shadow: 0 11px 24px rgba(15, 23, 42, 0.28);
+}
+
+.login-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.18);
+}
+
+.login-button:focus-visible,
+.password-toggle:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.7);
+    outline-offset: 3px;
+}
+
+/* エラー */
+.field-error {
+    margin: 0;
+    padding: 8px 10px;
+
+    color: #991b1b;
+    font-size: 14px;
+    font-weight: 700;
+
+    background: #fff1f2;
+    border-left: 4px solid #dc2626;
+    border-radius: 4px;
 }
 
 
@@ -51,6 +248,32 @@ body {
     font-size: 1.4rem;
     font-weight: bold;
     text-align: center;
+}
+
+.menu-card {
+    cursor: pointer;
+    transition:
+        transform 0.15s ease,
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-2px);
+    background-color: #f5f8ff;
+    border-color: #2563eb;
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.16);
+}
+
+.menu-card:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(15, 35, 70, 0.15);
+}
+
+.menu-card:focus-visible {
+    outline: 3px solid rgba(37, 99, 235, 0.35);
+    outline-offset: 3px;
 }
 
 /* 資産一覧・申請画面 */
@@ -452,7 +675,10 @@ body {
     padding: 0 32px;
 
     color: #ffffff;
-    background: #172554;
+    background: linear-gradient(90deg,
+            #17208a 0%,
+            #2563c7 70%,
+            #367fdc 100%);
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0.15);
 }
 
@@ -481,8 +707,12 @@ body {
     box-sizing: border-box;
     padding: 32px 20px;
 
-    background: #ffffff;
-    border-right: 1px solid #dbe3ee;
+    color: #ffffff;
+    background: linear-gradient(180deg,
+            #17208a 0%,
+            #2563c7 65%,
+            #4a9ee8 100%);
+    border-right: none;
 }
 
 .sidebar ul {
@@ -499,18 +729,29 @@ body {
     display: block;
     padding: 14px 16px;
 
-    color: #475569;
+    color: rgba(255, 255, 255, 0.9);
     font-weight: 600;
     text-decoration: none;
 
     border-left: 3px solid transparent;
     border-radius: 0 6px 6px 0;
+
+    transition:
+        color 0.15s ease,
+        background-color 0.15s ease,
+        border-color 0.15s ease;
 }
 
 .sidebar a:hover {
-    color: #2563eb;
-    background: #eff6ff;
-    border-left-color: #2563eb;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.16);
+    border-left-color: #ffffff;
+}
+
+.sidebar a.active {
+    color: #172554;
+    background: #ffffff;
+    border-left-color: #ffffff;
 }
 
 /* 右側の画面 */
@@ -518,40 +759,5 @@ body {
     min-width: 0;
     flex: 1;
     box-sizing: border-box;
-    padding: 0 24px;
-}
-
-.app-header {
-    display: flex;
-    height: 64px;
-    align-items: center;
-    gap: 24px;
-    padding: 0 32px;
-    background: #172554;
-    color: white;
-}
-
-.app-header h2 {
-    margin-right: auto;
-}
-
-.app-body {
-    display: flex;
-    align-items: flex-start;
-}
-
-.sidebar {
-    width: 260px;
-    min-height: calc(100vh - 64px);
-    flex-shrink: 0;
-    box-sizing: border-box;
-    padding: 32px 20px;
-    background: white;
-    border-right: 1px solid #dbe3ee;
-}
-
-.main-content {
-    flex: 1;
-    min-width: 0;
     padding: 0 24px;
 }

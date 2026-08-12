@@ -16,7 +16,9 @@
             </div>
         @endif
 
-        <h1>資産登録・在庫管理画面</h1>
+        <a href="/admin" class="{{ request()->is('admin*') ? 'active' : '' }}">
+            <h1>資産登録・在庫管理画面</h1>
+        </a>
         <button type="button" onclick="document.getElementById('loanRegisterModal').showModal()">
             貸出資産を登録する
         </button>
