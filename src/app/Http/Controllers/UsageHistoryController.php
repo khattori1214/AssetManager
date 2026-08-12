@@ -28,15 +28,12 @@ class UsageHistoryController extends Controller
 
     }
 
-   
+
     public function returnAsset(Request $request)
     {
         $loanHistoryId = $request->input('loan_history_id');
 
         $loanhistory = new LoanHistory();
-
-        $loanhistory->returnAsset($loanHistoryId, Auth::id());
-
 
         $updated = $loanhistory->returnAsset(
             $loanHistoryId,
@@ -45,7 +42,7 @@ class UsageHistoryController extends Controller
 
         if ($updated) {
             return redirect('/histories')
-                ->with('error', '返却が完了しました。');
+                ->with('success', '返却が完了しました。');
         }
         return redirect('/histories')
             ->with('error', '返却処理を実行できませんでした。');
