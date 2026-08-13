@@ -4,18 +4,6 @@
 
     <div class="content-area">
 
-        @if (session('success'))
-            <div class="success-message">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="error-message">
-                {{ session('error') }}
-            </div>
-        @endif
-
         <a href="/admin" class="{{ request()->is('admin*') ? 'active' : '' }}">
             <h1>資産登録・在庫管理画面</h1>
         </a>
@@ -44,7 +32,13 @@
                     <td>{{ $asset->asset_id }}</td>
                     <td>{{ $asset->asset_name }}</td>
                     <td>{{ $asset->category_name }}</td>
-                    <td>利用可能</td>
+                    <td>
+                        @if ($asset->is_borrowed)
+                            貸出中
+                        @else
+                            利用可能
+                        @endif
+                    </td>
                     <td>{{ $asset->max_loan_days }}日</td>
                     <td>
 

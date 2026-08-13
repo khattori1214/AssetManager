@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asset;
+use App\Models\LoanHistory;
 use Illuminate\Http\Request;
 use App\Models\CsvFile;
 
@@ -16,9 +17,15 @@ class AssetManagementController extends Controller
     public function index()
     {
         $assetModel = new Asset();
+        $loanHistoryModel = new LoanHistory();
 
         $loanAssetData = $assetModel->loanAssetData();
         $consumableAssetData = $assetModel->consumableAssetData();
+
+        foreach ($loanAssetData as $asset) {
+            $asset->isBorrowed = $loanHistoryModel->isBorrowed($asset->asset_id);
+        }
+
 
         $csvModel = new CsvFile();
         $csvData = $csvModel->csvData();
