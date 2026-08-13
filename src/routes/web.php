@@ -30,9 +30,6 @@ Route::middleware('auth')->group(function () {
     // 資産一覧・申請画面表示
     Route::get('/assets', [AssetApplicationController::class, 'index']);
 
-    // 資産一覧・申請画面での検索機能
-    Route::get('/assets/search', [AssetApplicationController::class, 'search']);
-
     // 資産一覧・申請画面での消耗品減算処理
     Route::post('/assets/acquire', [AssetApplicationController::class, 'acquire']);
 
@@ -59,8 +56,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::delete('/admin/assets/{id}', [AssetManagementController::class, 'destroy']);
 
 
-// 経理連携用CSV出力バッチ処理
-Route::get('/admin/csv/download', [AssetManagementController::class, 'download']);
+    // 経理連携用CSV出力バッチ処理
+    Route::get('/admin/csv/download', [AssetManagementController::class, 'download']);
 
 });
 
