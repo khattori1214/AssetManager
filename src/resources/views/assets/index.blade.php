@@ -30,7 +30,7 @@
         @endif
 
         {{-- 返却期限超過警告 --}}
-        @if (($overdueCount ?? 0) > 0)
+        @if ($overdueCount > 0)
             <div class="error-message">
                 【警告】返却期限を過ぎている資産があります
                 （{{ $overdueCount }}件）。
@@ -45,7 +45,7 @@
                 <div>
                     <label for="keyword">資産名</label>
 
-                    <input type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="例:PC">
+                    <input type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" maxlength="50" placeholder="例:PC">
                 </div>
 
                 <div>
@@ -209,8 +209,8 @@
                                             数量
                                         </label>
 
-                                        <input type="number" id="quantity{{ $asset->asset_id }}" name="quantity" min="1"
-                                            max="{{ $asset->stock }}" value="1" required>
+                                        <input type="number" id="quantity{{ $asset->asset_id}}" name="quantity" min="1"
+                                            max="{{ min($asset->stock, $asset->max_request_quantity) }}" value="1" required>
                                     </div>
 
                                     <button type="submit">取得する</button>

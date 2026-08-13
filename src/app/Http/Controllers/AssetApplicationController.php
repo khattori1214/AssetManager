@@ -57,6 +57,10 @@ class AssetApplicationController extends Controller
 
         $asset = $assetModel->findConsumable($validated['asset_id']);
 
+        if (!$asset) {
+            return back()->with('error', __('messages.asset.asset_not_found'));
+        }
+
         // 最大申請数チェック
         if ($validated['quantity'] > $asset->max_request_quantity) {
             return back()->with(
@@ -127,7 +131,7 @@ class AssetApplicationController extends Controller
         }
 
         // 7日以上超過している場合は貸出不可
-        if ($loanHistory->isBorrowed($assetId)) {
+        if ($loanHistory->isLoanLocked($userId)) {
             return back()->with(
                 'error',
                 '選択した資産は、すでに貸出中です。'
