@@ -14,17 +14,17 @@ class UsageHistoryController extends Controller
     public function index()
     {
         $userId = Auth::id();
-        $consumablehistory = new ConsumableHistory();
-        $loanhistory = new LoanHistory();
+        $consumableHistory = new ConsumableHistory();
+        $loanHistory = new LoanHistory();
 
-        $consumablehistoryData = $consumablehistory->historyData($userId);
-        $loanhistoryData = $loanhistory->historyData($userId);
-        $pastloanhistoryData = $loanhistory->pasthistoryData($userId);
+        $consumableHistoryData = $consumableHistory->historyData($userId);
+        $loanHistoryData = $loanHistory->historyData($userId);
+        $pastLoanHistoryData = $loanHistory->pastHistoryData($userId);
 
         // 返却期限超過
-        $overdueCount = $loanhistory->countOverdue($userId);
+        $overdueCount = $loanHistory->countOverdue($userId);
 
-        return view('histories.index', ['consumablehistoryData' => $consumablehistoryData, 'loanhistoryData' => $loanhistoryData, 'pastloanhistoryData' => $pastloanhistoryData, 'overdueCount' => $overdueCount]);
+        return view('histories.index', ['consumableHistoryData' => $consumableHistoryData, 'loanHistoryData' => $loanHistoryData, 'pastLoanHistoryData' => $pastLoanHistoryData, 'overdueCount' => $overdueCount]);
 
     }
 
@@ -33,9 +33,9 @@ class UsageHistoryController extends Controller
     {
         $loanHistoryId = $request->input('loan_history_id');
 
-        $loanhistory = new LoanHistory();
+        $loanHistory = new LoanHistory();
 
-        $updated = $loanhistory->returnAsset(
+        $updated = $loanHistory->returnAsset(
             $loanHistoryId,
             Auth::id()
         );

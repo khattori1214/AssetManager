@@ -64,7 +64,7 @@ class LoanHistory extends Model
     /**
      * ログインユーザーが過去に借りた資産を取得する
      */
-    public function pasthistoryData($userId)
+    public function pastHistoryData($userId)
     {
         return LoanHistory::join(
             'assets',
@@ -118,11 +118,13 @@ class LoanHistory extends Model
         return $borrowResister;
     }
 
-    // 貸出中へ更新する
+    /**
+     * 指定した資産が貸出中か判定する
+     */
     public function isBorrowed($assetId)
     {
         return LoanHistory::where('asset_id', $assetId)
-            ->wherenull('return_date')
+            ->whereNull('return_date')
             ->exists();
     }
     /**

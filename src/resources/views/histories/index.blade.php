@@ -4,7 +4,7 @@
 
     <div class="content-area">
 
-        @if (($overdueCount ?? 0) > 0)
+        @if ($overdueCount > 0)
             <div class="error-message">
                 【警告】返却期限を過ぎている資産があります
                 （{{ $overdueCount }}件）。
@@ -28,7 +28,7 @@
                 <th>操作</th>
             </tr>
 
-            @forelse ($loanhistoryData as $history)
+            @forelse ($loanHistoryData as $history)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $history->asset_name }}</td>
@@ -87,7 +87,7 @@
         </table>
 
         <div class="pagination-wrapper">
-            {{ $loanhistoryData->links('pagination::bootstrap-4') }}
+            {{ $loanHistoryData->links('pagination::bootstrap-4') }}
         </div>
 
         <h2>過去に申請した資産・消耗品一覧</h2>
@@ -103,8 +103,8 @@
             </tr>
 
             @if (
-                    $pastloanhistoryData->count() === 0 &&
-                    $consumablehistoryData->count() === 0
+                    $pastLoanHistoryData->count() === 0 &&
+                    $consumableHistoryData->count() === 0
                 )
                 <tr>
                     <td colspan="7">
@@ -114,7 +114,7 @@
             @endif
 
 
-            @foreach ($pastloanhistoryData as $history)
+            @foreach ($pastLoanHistoryData as $history)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $history->asset_name }}</td>
@@ -127,7 +127,7 @@
             @endforeach
 
 
-            @foreach ($consumablehistoryData as $history)
+            @foreach ($consumableHistoryData as $history)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $history->asset_name }}</td>
@@ -141,12 +141,12 @@
         </table>
 
         <div class="pagination-wrapper">
-            {{ $pastloanhistoryData->links('pagination::bootstrap-4') }}
+            {{ $pastLoanHistoryData->links('pagination::bootstrap-4') }}
         </div>
 
 
         <div class="pagination-wrapper">
-            {{ $consumablehistoryData->links('pagination::bootstrap-4') }}
+            {{ $consumableHistoryData->links('pagination::bootstrap-4') }}
         </div>
     </div>
 @endsection
