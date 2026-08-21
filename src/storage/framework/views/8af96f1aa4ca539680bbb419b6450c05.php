@@ -4,16 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>?v=<?php echo e(filemtime(public_path('css/app.css'))); ?>">
     <title>AssetManager</title>
 </head>
 
 <body>
 
     <!-- 上部ヘッダー -->
-    <header>
+    <header class="app-header">
 
-        <h2>AssetManager</h2>
+        <h2>AssetManager-社内資産・備品管理システム-</h2>
 
         <div>
             ログイン中：
@@ -21,21 +21,27 @@
 
         </div>
 
-        <form action="/logout" method="post">
+        <form action="/logout" method="POST" class="logout-form">
             <?php echo csrf_field(); ?>
-            <button>ログアウト</button>
+
+            <button type="submit" class="logout-button">
+                ログアウト
+            </button>
         </form>
 
     </header>
 
-    <hr>
-
-    <div style="display:flex;">
-
+    <div class="app-body">
         <!-- 左メニュー -->
-        <aside style="width:220px">
+        <aside class="sidebar">
 
             <ul>
+
+                <li>
+                    <a href="/top">
+                        トップ画面
+                    </a>
+                </li>
 
                 <li>
                     <a href="/assets">
@@ -53,7 +59,7 @@
 
                     <li>
                         <a href="/admin">
-                            資産登録・在庫管理
+                            資産登録・在庫管理<br>【管理者のみ】
                         </a>
                     </li>
 
@@ -64,7 +70,7 @@
         </aside>
 
         <!-- 各画面 -->
-        <main style="flex:1">
+        <main class="main-content">
 
             
             <?php if(session('success')): ?>

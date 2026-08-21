@@ -25,10 +25,12 @@
                 <span>現在借りている資産や過去の利用履歴を確認し、貸出中の資産を返却します。</span>
             </a>
 
-            <a href="/admin" class="menu-card">
-                <span>資産登録・在庫管理画面</span>
-                <span>【管理者のみ】貸出資産・消耗品の登録、消耗品の在庫更新、経理連携用CSVのダウンロードを行います。</span>
-            </a>
+            @if(Auth::user()->role_id === 1)
+                <a href="/admin" class="menu-card">
+                    <span>資産登録・在庫管理画面</span>
+                    <span>【管理者のみ】貸出資産・消耗品の登録、消耗品の在庫更新、経理連携用CSVのダウンロードを行います。</span>
+                </a>
+            @endif
         </div>
     </div>
 

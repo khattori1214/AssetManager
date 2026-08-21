@@ -1,7 +1,8 @@
 <?php $__env->startSection('content'); ?>
     <div class="content-area">
-
-        <h1>資産一覧・申請画面</h1>
+        <a href="/assets" class="<?php echo e(request()->is('assets*') ? 'active' : ''); ?>">
+            <h1>資産一覧・申請画面</h1>
+        </a>
 
         
         <?php if(session('success')): ?>
@@ -29,7 +30,7 @@
         <?php endif; ?>
 
         
-        <?php if(($overdueCount ?? 0) > 0): ?>
+        <?php if($overdueCount > 0): ?>
             <div class="error-message">
                 【警告】返却期限を過ぎている資産があります
                 （<?php echo e($overdueCount); ?>件）。
@@ -44,7 +45,7 @@
                 <div>
                     <label for="keyword">資産名</label>
 
-                    <input type="text" id="keyword" name="keyword" value="<?php echo e(request('keyword')); ?>" placeholder="例:PC">
+                    <input type="text" id="keyword" name="keyword" value="<?php echo e(request('keyword')); ?>" maxlength="50" placeholder="例:PC">
                 </div>
 
                 <div>
@@ -109,15 +110,23 @@
                                 <?php if($asset->is_borrowed): ?>
                                     貸出中
                                 <?php else: ?>
-                                    貸出
+                                    借りる
                                 <?php endif; ?>
                             </button>
+
+                            
+                            <?php if(!$asset->is_borrowed && $isLocked): ?>
+                                <p class="disabled-reason">
+                                    返却期限を7日以上超過しているため借りることができません。
+                                </p>
+                            <?php endif; ?>
+
 
                             <dialog id="borrowModal<?php echo e($asset->asset_id); ?>">
                                 <h2>貸出確認</h2>
 
                                 <p>
-                                    「<?php echo e($asset->asset_name); ?>」を貸し出しますか？
+                                    「<?php echo e($asset->asset_name); ?>」を借りますか？
                                 </p>
 
                                 <form method="post" action="/assets/borrow">
@@ -125,11 +134,11 @@
 
                                     <input type="hidden" name="asset_id" value="<?php echo e($asset->asset_id); ?>">
 
-                                    <button type="submit">はい</button>
+                                    <button type="submit">借りる</button>
 
                                     <button type="button"
                                         onclick="document.getElementById('borrowModal<?php echo e($asset->asset_id); ?>').close()">
-                                        いいえ
+                                        キャンセル
                                     </button>
                                 </form>
                             </dialog>
@@ -156,7 +165,6 @@
                 <tr>
                     <th>NO.</th>
                     <th>品名</th>
-                    <th>カテゴリ</th>
                     <th>在庫数</th>
                     <th>状態</th>
                     <th>操作</th>
@@ -168,7 +176,6 @@
                     <tr>
                         <td><?php echo e($asset->asset_id); ?></td>
                         <td><?php echo e($asset->asset_name); ?></td>
-                        <td><?php echo e($asset->category_name); ?></td>
                         <td><?php echo e($asset->stock); ?></td>
 
                         <td>
@@ -183,7 +190,7 @@
                             <button type="button"
                                 onclick="document.getElementById('acquireModal<?php echo e($asset->asset_id); ?>').showModal()"
                                 <?php if($asset->stock <= 0): echo 'disabled'; endif; ?>>
-                                取得
+                                取得する
                             </button>
 
                             <dialog id="acquireModal<?php echo e($asset->asset_id); ?>">
@@ -204,14 +211,14 @@
                                         </label>
 
                                         <input type="number" id="quantity<?php echo e($asset->asset_id); ?>" name="quantity" min="1"
-                                            max="<?php echo e($asset->stock); ?>" value="1" required>
+                                            max="<?php echo e(min($asset->stock, $asset->max_request_quantity)); ?>" value="1" required>
                                     </div>
 
-                                    <button type="submit">はい</button>
+                                    <button type="submit">取得する</button>
 
                                     <button type="button"
                                         onclick="document.getElementById('acquireModal<?php echo e($asset->asset_id); ?>').close()">
-                                        いいえ
+                                        キャンセル
                                     </button>
                                 </form>
                             </dialog>

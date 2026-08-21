@@ -2,27 +2,16 @@
 
     <div class="content-area">
 
-        <?php if(session('success')): ?>
-            <div class="success-message">
-                <?php echo e(session('success')); ?>
-
-            </div>
-        <?php endif; ?>
-
-        <?php if(session('error')): ?>
-            <div class="error-message">
-                <?php echo e(session('error')); ?>
-
-            </div>
-        <?php endif; ?>
-
         <?php if($overdueCount > 0): ?>
             <div class="error-message">
-                【警告】返却期限を過ぎている資産があります（<?php echo e($overdueCount); ?>件）。
+                【警告】返却期限を過ぎている資産があります
+                （<?php echo e($overdueCount); ?>件）。
             </div>
         <?php endif; ?>
 
-        <h1>利用履歴・返却画面</h1>
+        <a href="/histories" class="<?php echo e(request()->is('histories*') ? 'active' : ''); ?>">
+            <h1>利用履歴・返却画面</h1>
+        </a>
 
         <h2>現在借りている資産</h2>
         <table border="1">
@@ -32,17 +21,19 @@
                 <th>カテゴリ</th>
                 <th>種別</th>
                 <th>貸出日</th>
+                <th>返却期限</th>
                 <th>状態</th>
                 <th>操作</th>
             </tr>
 
-            <?php $__empty_1 = true; $__currentLoopData = $loanhistoryData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $history): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+            <?php $__empty_1 = true; $__currentLoopData = $loanHistoryData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $history): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                 <tr>
                     <td><?php echo e($loop->iteration); ?></td>
                     <td><?php echo e($history->asset_name); ?></td>
                     <td><?php echo e($history->category_name); ?></td>
-                    <td><?php echo e($history->asset_type); ?></td>
+                    <td>貸出資産</td>
                     <td><?php echo e($history->loan_date); ?></td>
+                    <td><?php echo e($history->due_date); ?></td>
 
                     <td>
                         <?php if($history->due_date < today()): ?>
@@ -56,7 +47,7 @@
                         <!-- 返却ボタン -->
                         <button type="button"
                             onclick="document.getElementById('returnModal<?php echo e($history->loan_history_id); ?>').showModal()">
-                            返却
+                            返却する
                         </button>
 
 
@@ -78,7 +69,7 @@
 
                                 <button type="button"
                                     onclick="document.getElementById('returnModal<?php echo e($history->loan_history_id); ?>').close()">
-                                    いいえ
+                                    キャンセル
                                 </button>
                             </form>
                         </dialog>
@@ -86,7 +77,7 @@
                 </tr>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                 <tr>
-                    <td colspan="7">
+                    <td colspan="8">
                         現在貸出中の資産はありません。
                     </td>
                 </tr>
@@ -94,7 +85,7 @@
         </table>
 
         <div class="pagination-wrapper">
-            <?php echo e($loanhistoryData->links('pagination::bootstrap-4')); ?>
+            <?php echo e($loanHistoryData->links('pagination::bootstrap-4')); ?>
 
         </div>
 
@@ -111,8 +102,8 @@
             </tr>
 
             <?php if(
-                    $pastloanhistoryData->count() === 0 &&
-                    $consumablehistoryData->count() === 0
+                    $pastLoanHistoryData->count() === 0 &&
+                    $consumableHistoryData->count() === 0
                 ): ?>
                 <tr>
                     <td colspan="7">
@@ -122,12 +113,12 @@
             <?php endif; ?>
 
 
-            <?php $__currentLoopData = $pastloanhistoryData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $history): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php $__currentLoopData = $pastLoanHistoryData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $history): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <tr>
                     <td><?php echo e($loop->iteration); ?></td>
                     <td><?php echo e($history->asset_name); ?></td>
                     <td><?php echo e($history->category_name); ?></td>
-                    <td><?php echo e($history->asset_type); ?></td>
+                    <td>貸出資産</td>
                     <td><?php echo e($history->loan_date); ?></td>
                     <td><?php echo e($history->return_date); ?></td>
                     <td>返却済</td>
@@ -135,12 +126,12 @@
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
 
-            <?php $__currentLoopData = $consumablehistoryData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $history): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+            <?php $__currentLoopData = $consumableHistoryData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $history): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                 <tr>
                     <td><?php echo e($loop->iteration); ?></td>
                     <td><?php echo e($history->asset_name); ?></td>
                     <td><?php echo e($history->category_name ?? '-'); ?></td>
-                    <td><?php echo e($history->asset_type); ?></td>
+                    <td>消耗品</td>
                     <td><?php echo e($history->request_date); ?></td>
                     <td><?php echo e($history->quantity); ?> <?php echo e($history->unit); ?></td>
                     <td>取得済</td>
@@ -149,13 +140,13 @@
         </table>
 
         <div class="pagination-wrapper">
-            <?php echo e($pastloanhistoryData->links('pagination::bootstrap-4')); ?>
+            <?php echo e($pastLoanHistoryData->links('pagination::bootstrap-4')); ?>
 
         </div>
 
 
         <div class="pagination-wrapper">
-            <?php echo e($consumablehistoryData->links('pagination::bootstrap-4')); ?>
+            <?php echo e($consumableHistoryData->links('pagination::bootstrap-4')); ?>
 
         </div>
     </div>

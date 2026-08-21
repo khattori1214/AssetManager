@@ -2,27 +2,15 @@
 
     <div class="content-area">
 
-        <?php if(session('success')): ?>
-            <div class="success-message">
-                <?php echo e(session('success')); ?>
-
-            </div>
-        <?php endif; ?>
-
-        <?php if(session('error')): ?>
-            <div class="error-message">
-                <?php echo e(session('error')); ?>
-
-            </div>
-        <?php endif; ?>
-
-        <h1>資産登録・在庫管理画面</h1>
+        <a href="/admin" class="<?php echo e(request()->is('admin*') ? 'active' : ''); ?>">
+            <h1>資産登録・在庫管理画面</h1>
+        </a>
         <button type="button" onclick="document.getElementById('loanRegisterModal').showModal()">
-            貸出資産を新規登録
+            貸出資産を登録する
         </button>
 
         <button type="button" onclick="document.getElementById('consumableRegisterModal').showModal()">
-            消耗品を新規登録
+            消耗品を登録する
         </button>
         <h2>貸出資産一覧</h2>
 
@@ -42,12 +30,18 @@
                     <td><?php echo e($asset->asset_id); ?></td>
                     <td><?php echo e($asset->asset_name); ?></td>
                     <td><?php echo e($asset->category_name); ?></td>
-                    <td>利用可能</td>
+                    <td>
+                        <?php if($asset->is_borrowed): ?>
+                            貸出中
+                        <?php else: ?>
+                            利用可能
+                        <?php endif; ?>
+                    </td>
                     <td><?php echo e($asset->max_loan_days); ?>日</td>
                     <td>
 
                         <button type="button" onclick="openDeleteModal('<?php echo e($asset->asset_id); ?>', '<?php echo e($asset->asset_name); ?>')">
-                            削除
+                            削除する
                         </button>
                     </td>
                 </tr>
@@ -89,15 +83,12 @@
                     <td>
                         <button type="button"
                             onclick="document.getElementById('stockModal-<?php echo e($asset->asset_id); ?>').showModal()">
-                            在庫更新
+                            在庫を更新する
                         </button>
 
-                        <form action="/admin/assets/<?php echo e($asset->asset_id); ?>" method="post" style="display:inline;">
-                            <?php echo csrf_field(); ?>
-                            <?php echo method_field('DELETE'); ?>
-
-                            <button type="submit">削除</button>
-                        </form>
+                        <button type="button" onclick="openDeleteModal('<?php echo e($asset->asset_id); ?>', '<?php echo e($asset->asset_name); ?>')">
+                            削除する
+                        </button>
                     </td>
                 </tr>
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -111,7 +102,7 @@
         <!-- 消耗品在庫更新ダイアログ -->
         <?php $__currentLoopData = $consumableAssetData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $asset): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <dialog id="stockModal-<?php echo e($asset->asset_id); ?>">
-                <h2>消耗品在庫更新</h2>
+                <h2>消耗品の在庫を更新する</h2>
 
                 <form action="/admin/assets/<?php echo e($asset->asset_id); ?>/stock" method="post">
                     <?php echo csrf_field(); ?>
@@ -144,11 +135,13 @@
                         <?php echo e($asset->monthly_request_limit); ?>（変更不可）
                     </p>
 
+
+                    <button type="submit">更新する</button>
+
                     <button type="button" onclick="document.getElementById('stockModal-<?php echo e($asset->asset_id); ?>').close()">
                         キャンセル
                     </button>
 
-                    <button type="submit">登録する</button>
                 </form>
             </dialog>
         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -156,7 +149,7 @@
 
 
         <dialog id="loanRegisterModal">
-            <h2>貸出資産登録</h2>
+            <h2>貸出資産を登録する</h2>
 
             <form action="/admin/assets" method="post">
                 <?php echo csrf_field(); ?>
@@ -189,16 +182,16 @@
                     </select>
                 </div>
 
-                <button type="submit">登録</button>
+                <button type="submit">登録する</button>
 
                 <button type="button" onclick="document.getElementById('loanRegisterModal').close()">
-                    閉じる
+                    キャンセル
                 </button>
             </form>
         </dialog>
 
         <dialog id="consumableRegisterModal">
-            <h2>消耗品登録</h2>
+            <h2>消耗品を登録する</h2>
 
             <form action="/admin/assets" method="post">
                 <?php echo csrf_field(); ?>
@@ -242,18 +235,18 @@
                     <input type="number" name="monthly_request_limit" min="1">
                 </div>
 
-                <button type="submit">登録</button>
+                <button type="submit">登録する</button>
 
                 <button type="button" onclick="document.getElementById('consumableRegisterModal').close()">
-                    閉じる
+                    キャンセル
                 </button>
             </form>
         </dialog>
 
 
-        <h3>経理連携用CSVファイル</h3>
+        <h2>経理連携用CSVファイル</h2>
         <a href="/admin/csv/download">
-            CSVをダウンロード
+            経理連携用CSVをダウンロード
         </a>
 
 
@@ -268,13 +261,14 @@
                 <?php echo csrf_field(); ?>
                 <?php echo method_field('DELETE'); ?>
 
+                <button type="submit">
+                    削除する
+                </button>
+
                 <button type="button" onclick="document.getElementById('deleteModal').close()">
                     キャンセル
                 </button>
 
-                <button type="submit">
-                    はい
-                </button>
             </form>
         </dialog>
 

@@ -4,63 +4,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>?v=2">
+    <title>ログイン | AssetManager</title>
+    <link rel="stylesheet" href="<?php echo e(asset('css/app.css')); ?>?v=3">
 </head>
 
 <body class="login-page">
-    <h3>AssetManager
-        -社内資産・備品管理システム-</h3>
-    <h4>ログイン画面</h4>
+    <main class="login-card">
+        <h1>AssetManager</h1>
+        <p class="login-subtitle">
+            社内資産・備品管理システム
+        </p>
 
-    <form action="/login" method="post">
-        <?php echo csrf_field(); ?>
+        <form action="/login" method="post" class="login-form">
+            <?php echo csrf_field(); ?>
 
-        <?php $__errorArgs = ['login'];
+            <?php $__errorArgs = ['login'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-            <div class="error"><span><?php echo e($message); ?></span></div>
-        <?php unset($message);
+                <div class="error-message">
+                    <?php echo e($message); ?>
+
+                </div>
+            <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
 
-        <label>社員番号ID</label>
-        <br>
-        <input type="text" id="employee_no" name="employee_no">
-        <?php $__errorArgs = ['employee_no'];
+            <div class="form-group">
+                <label for="employee_no">社員番号ID</label>
+                <input type="text" id="employee_no" name="employee_no" placeholder="社員番号を入力">
+                <?php $__errorArgs = ['employee_no'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-            <div class="error"><span><?php echo e($message); ?></span></div>
-        <?php unset($message);
+                    <p class="field-error">
+                        <?php echo e($message); ?>
+
+                    </p>
+                <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
+            </div>
 
-        <br>
-        <label>password</label>
-        <br>
-        <input type="password" id="password" name="password">
-        <?php $__errorArgs = ['password'];
+            <div class="form-group">
+            
+                <label for="password">パスワード</label>
+                <div class="password-field">
+                <input type="password" id="password" name="password" placeholder="パスワードを入力">
+                <?php $__errorArgs = ['password'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
 $message = $__bag->first($__errorArgs[0]); ?>
-            <div class="error"><span><?php echo e($message); ?></span></div>
-        <?php unset($message);
+                    <p class="field-error">
+                        <?php echo e($message); ?>
+
+                    </p>
+                <?php unset($message);
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
+                </div>
+            </div>
 
-        <br>
-        <input type="submit" value="ログイン">
-    </form>
-
-
+            <button type="submit" class="login-button">
+                ログイン
+            </button>
+        </form>
+    </main>
 
 </body>
 
