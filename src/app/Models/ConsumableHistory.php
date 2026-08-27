@@ -68,14 +68,17 @@ class ConsumableHistory extends Model
 
     /**
      * 資産一覧・申請画面
-     * ログインユーザーが当月に申請済みか判定する
+     * ログインユーザーによる対象消耗品の当月申請回数を取得する
      */
-    public function alreadyRequestedThisMonth($userId)
-    {
+    public function requestedCountThisMonth(
+        int $userId,
+        int $assetId
+    ): int {
         return ConsumableHistory::where('user_id', $userId)
+            ->where('asset_id', $assetId)
             ->whereYear('request_date', now()->year())
             ->whereMonth('request_date', now()->month())
-            ->exists();
+            ->count();
     }
 
     /**

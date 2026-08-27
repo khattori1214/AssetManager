@@ -70,12 +70,12 @@ class AssetApplicationController extends Controller
         }
 
         // 月1回制限
-        if (
-            $history->alreadyRequestedThisMonth(
-                Auth::id(),
-                $validated['asset_id']
-            )
-        ) {
+        $requestedCount = $history->requestedCountThisMonth(
+            Auth::id(),
+            $validated['asset_id']
+        );
+
+        if ($requestedCount >= $asset->monthly_request_limit) {
             return back()->with(
                 'error',
                 'この消耗品は今月すでに申請済みです。'
