@@ -76,8 +76,8 @@ class ConsumableHistory extends Model
     ): int {
         return ConsumableHistory::where('user_id', $userId)
             ->where('asset_id', $assetId)
-            ->whereYear('request_date', now()->year())
-            ->whereMonth('request_date', now()->month())
+            ->whereYear('request_date', now()->year)
+            ->whereMonth('request_date', now()->month)
             ->count();
     }
 
