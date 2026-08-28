@@ -14,5 +14,5 @@ Schedule::command('app:send-warning-email')
 
 // 経理連携CSV出力バッチ：毎月1日の午前1時
 Schedule::command('app:generate-accounting-csv')
-    ->monthlyOn(28, '12:15');
+    ->monthlyOn(28, '12:19');
 
