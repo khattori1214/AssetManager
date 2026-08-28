@@ -9,10 +9,10 @@ Artisan::command('inspire', function () {
 
 
 Schedule::command('app:send-warning-email')
-    ->dailyAt('11:45');
+    ->dailyAt('11:56');
 
 Schedule::command('app:generate-accounting-csv')
-    ->dailyAt('11:45');
+    ->dailyAt('11:56');
 // Schedule::command('app:generate-accounting-csv')
 //     ->monthlyOn(1, '00:00');
 
