@@ -23,7 +23,11 @@ class GenerateAccountingCsv extends Command
         // $csvData = $consumablehistory->historyData($targetPeriodStart,$targetPeriodEnd);
 
         $csvData = $consumablehistory->csvData($targetPeriodStart, $targetPeriodEnd);
-        $fileName = 'accounting_' . now()->format('Ym') . '.csv';
+        // $fileName = 'accounting_' . now()->format('Ym') . '.csv';
+        // 対象月をファイル名に使用する
+        $fileName = 'accounting_'
+            . $targetPeriodStart->format('Ym')
+            . '.csv';
         $csvContent = fopen(storage_path('app/csv/' . $fileName), 'w');
         foreach ($csvData as $csv) {
             fputcsv($csvContent, [
