@@ -16,7 +16,6 @@
         <h2>AssetManager-社内資産・備品管理システム-</h2>
 
         <div>
-            ログイン中：
             {{ Auth::user()->user_name }}
         </div>
 
