@@ -133,9 +133,10 @@ class LoanHistory extends Model
     public function overdueUsers()
     {
         return LoanHistory::join('users', 'users.user_id', '=', 'loan_histories.user_id')
+            ->join('assets', 'assets.asset_id', '=', 'loan_histories.asset_id')
             ->wherenull('return_date')
             ->where('due_date', '<', today())
-            ->select('users.email', 'users.user_name', 'loan_histories.due_date')
+            ->select('users.email', 'users.user_name', 'loan_histories.due_date','assets.asset_name')
             ->get();
     }
 

@@ -24,17 +24,6 @@ class WarningMail extends Mailable
     }
 
     /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Warning Mail',
-        );
-    }
-
-
-    /**
      * Get the attachments for the message.
      *
      * @return array<int, Attachment>
@@ -47,7 +36,7 @@ class WarningMail extends Mailable
     public function build()
     {
         return $this
-            ->subject('返却期限超過のお知らせ')
+            ->subject('【AssetManager】貸出資産の返却期限を過ぎています')
             ->view('emails.warning');
     }
 
