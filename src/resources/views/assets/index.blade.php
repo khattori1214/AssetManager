@@ -192,7 +192,9 @@
             <tr>
                 <th>NO.</th>
                 <th>品名</th>
-                <th>在庫数</th>
+                <th>在庫数</th>]
+                <th>一回の申請上限</th>
+                <th>月間の申請上限</th>
                 <th>状態</th>
                 <th>操作</th>
             </tr>
@@ -204,6 +206,8 @@
                     <td>{{ $asset->asset_id }}</td>
                     <td>{{ $asset->asset_name }}</td>
                     <td>{{ $asset->stock }}</td>
+                    <td>{{ $asset->max_request_quantity }}</td>
+                    <td>{{ $asset->monthly_request_limit }}</td>
 
                     <td>
                         @if ($asset->stock < $asset->min_stock)
