@@ -138,7 +138,8 @@
 
                     <button type="submit">更新する</button>
 
-                    <button type="button" onclick="document.getElementById('stockModal-{{ $asset->asset_id }}').close()">
+                    <button type="button" class="cancel-button"
+                        onclick="document.getElementById('stockModal-{{ $asset->asset_id }}').close()">
                         キャンセル
                     </button>
 
@@ -237,7 +238,8 @@
 
                 <button type="submit">登録する</button>
 
-                <button type="button" onclick="document.getElementById('consumableRegisterModal').close()">
+                <button type="button" class="cancel-button"
+                    onclick="document.getElementById('consumableRegisterModal').close()">
                     キャンセル
                 </button>
             </form>
@@ -265,7 +267,7 @@
                     削除する
                 </button>
 
-                <button type="button" onclick="document.getElementById('deleteModal').close()">
+                <button type="button" class="cancel-button" onclick="document.getElementById('deleteModal').close()">
                     キャンセル
                 </button>
 

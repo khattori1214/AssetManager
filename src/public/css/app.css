@@ -540,6 +540,19 @@ button:disabled {
     background: #e2e8f0;
 }
 
+.cancel-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.cancel-button:hover {
+    background-color: #bb2d3b;
+}
+
 /* ===== テーブル ===== */
 
 .content-area table {

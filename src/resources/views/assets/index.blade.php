@@ -45,7 +45,8 @@
                 <div>
                     <label for="keyword">資産名</label>
 
-                    <input type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" maxlength="50" placeholder="例:PC">
+                    <input type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" maxlength="50"
+                        placeholder="例:PC">
                 </div>
 
                 <div>
@@ -64,177 +65,204 @@
                     </select>
                 </div>
 
-                <button type="submit" id="searchBtn">
-                    検索
-                </button>
-            </form>
+                <!-- <div>
+                            <label for="asset_type">状態</label>
+
+                            <select id="asset_type" name="asset_type">
+                                <option value="">すべて</option>
+
+                                <option value="loan" @selected(request('due_date') === 'null')>
+                                    貸出可能
+                                </option>
+
+                                <option value="loan" @selected(request('asset_type') === 'loan')>
+                                    貸出中
+                                </option>
+
+                                <option value="consumable" @selected(request('asset_type') === 'consumable')>
+                                    在庫あり
+                                </option>
+
+                                <option value="consumable" @selected(request('asset_type') === 'consumable')>
+                                    在庫なし
+                                </option>
+
+                                <option value="consumable" @selected(request('asset_type') === 'consumable')>
+                                    要発注
+                                </option> -->
+                </select>
         </div>
 
-        {{-- 貸出資産一覧 --}}
-        <h2>貸出資産一覧</h2>
+        <button type="submit" id="searchBtn">
+            検索
+        </button>
+        </form>
+    </div>
 
-        <table border="1">
-            <thead>
+    {{-- 貸出資産一覧 --}}
+    <h2>貸出資産一覧</h2>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>NO.</th>
+                <th>資産名</th>
+                <th>カテゴリ</th>
+                <th>状態</th>
+                <th>最大貸出期間</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @forelse ($loanAssetData as $asset)
                 <tr>
-                    <th>NO.</th>
-                    <th>資産名</th>
-                    <th>カテゴリ</th>
-                    <th>状態</th>
-                    <th>最大貸出期間</th>
-                    <th>操作</th>
-                </tr>
-            </thead>
+                    <td>{{ $asset->asset_id }}</td>
+                    <td>{{ $asset->asset_name }}</td>
+                    <td>{{ $asset->category_name }}</td>
 
-            <tbody>
-                @forelse ($loanAssetData as $asset)
-                    <tr>
-                        <td>{{ $asset->asset_id }}</td>
-                        <td>{{ $asset->asset_name }}</td>
-                        <td>{{ $asset->category_name }}</td>
+                    <td>
+                        @if ($asset->is_borrowed)
+                            貸出中
+                        @else
+                            利用可能
+                        @endif
+                    </td>
 
-                        <td>
+                    <td>{{ $asset->max_loan_days }}日</td>
+
+                    <td>
+                        <button type="button" onclick="document.getElementById('borrowModal{{ $asset->asset_id }}').showModal()"
+                            @disabled($asset->is_borrowed || $isLocked)>
+
                             @if ($asset->is_borrowed)
                                 貸出中
                             @else
-                                利用可能
+                                借りる
                             @endif
-                        </td>
+                        </button>
 
-                        <td>{{ $asset->max_loan_days }}日</td>
-
-                        <td>
-                            <button type="button"
-                                onclick="document.getElementById('borrowModal{{ $asset->asset_id }}').showModal()"
-                                @disabled($asset->is_borrowed || $isLocked)>
-
-                                @if ($asset->is_borrowed)
-                                    貸出中
-                                @else
-                                    借りる
-                                @endif
-                            </button>
-
-                            {{-- ロック理由だけボタンの外に表示 --}}
-                            @if (!$asset->is_borrowed && $isLocked)
-                                <p class="disabled-reason">
-                                    返却期限を7日以上超過しているため借りることができません。
-                                </p>
-                            @endif
+                        {{-- ロック理由だけボタンの外に表示 --}}
+                        @if (!$asset->is_borrowed && $isLocked)
+                            <p class="disabled-reason">
+                                返却期限を7日以上超過しているため借りることができません。
+                            </p>
+                        @endif
 
 
-                            <dialog id="borrowModal{{ $asset->asset_id }}">
-                                <h2>貸出確認</h2>
+                        <dialog id="borrowModal{{ $asset->asset_id }}">
+                            <h2>貸出確認</h2>
 
-                                <p>
-                                    「{{ $asset->asset_name }}」を借りますか？
-                                </p>
+                            <p>
+                                「{{ $asset->asset_name }}」を借りますか？
+                            </p>
 
-                                <form method="post" action="/assets/borrow">
-                                    @csrf
+                            <form method="post" action="/assets/borrow">
+                                @csrf
 
-                                    <input type="hidden" name="asset_id" value="{{ $asset->asset_id }}">
+                                <input type="hidden" name="asset_id" value="{{ $asset->asset_id }}">
 
-                                    <button type="submit">借りる</button>
+                                <button type="submit">借りる</button>
 
-                                    <button type="button"
-                                        onclick="document.getElementById('borrowModal{{ $asset->asset_id }}').close()">
-                                        キャンセル
-                                    </button>
-                                </form>
-                            </dialog>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="6">貸出資産はありません。</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-
-        <div class="pagination-wrapper">
-            {{ $loanAssetData->links('pagination::bootstrap-4') }}
-        </div>
-
-        {{-- 消耗品一覧 --}}
-        <h2>消耗品一覧</h2>
-
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>NO.</th>
-                    <th>品名</th>
-                    <th>在庫数</th>
-                    <th>状態</th>
-                    <th>操作</th>
+                                <button type="button" class="cancel-button"
+                                    onclick="document.getElementById('borrowModal{{ $asset->asset_id }}').close()">
+                                    キャンセル
+                                </button>
+                            </form>
+                        </dialog>
+                    </td>
                 </tr>
-            </thead>
+            @empty
+                <tr>
+                    <td colspan="6">貸出資産はありません。</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
 
-            <tbody>
-                @forelse ($consumableAssetData as $asset)
-                    <tr>
-                        <td>{{ $asset->asset_id }}</td>
-                        <td>{{ $asset->asset_name }}</td>
-                        <td>{{ $asset->stock }}</td>
+    <div class="pagination-wrapper">
+        {{ $loanAssetData->links('pagination::bootstrap-4') }}
+    </div>
 
-                        <td>
-                            @if ($asset->stock < $asset->min_stock)
-                                <strong>要発注</strong>
-                            @else
-                                在庫あり
-                            @endif
-                        </td>
+    {{-- 消耗品一覧 --}}
+    <h2>消耗品一覧</h2>
 
-                        <td>
-                            <button type="button"
-                                onclick="document.getElementById('acquireModal{{ $asset->asset_id }}').showModal()"
-                                @disabled($asset->stock <= 0)>
-                                取得する
-                            </button>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>NO.</th>
+                <th>品名</th>
+                <th>在庫数</th>
+                <th>状態</th>
+                <th>操作</th>
+            </tr>
+        </thead>
 
-                            <dialog id="acquireModal{{ $asset->asset_id }}">
-                                <h2>取得数量入力</h2>
+        <tbody>
+            @forelse ($consumableAssetData as $asset)
+                <tr>
+                    <td>{{ $asset->asset_id }}</td>
+                    <td>{{ $asset->asset_name }}</td>
+                    <td>{{ $asset->stock }}</td>
 
-                                <p>
-                                    「{{ $asset->asset_name }}」の取得数量を入力してください。
-                                </p>
+                    <td>
+                        @if ($asset->stock < $asset->min_stock)
+                            <strong>要発注</strong>
+                        @else
+                            在庫あり
+                        @endif
+                    </td>
 
-                                <form method="post" action="/assets/acquire">
-                                    @csrf
+                    <td>
+                        <button type="button"
+                            onclick="document.getElementById('acquireModal{{ $asset->asset_id }}').showModal()"
+                            @disabled($asset->stock <= 0)>
+                            取得する
+                        </button>
 
-                                    <input type="hidden" name="asset_id" value="{{ $asset->asset_id }}">
+                        <dialog id="acquireModal{{ $asset->asset_id }}">
+                            <h2>取得数量入力</h2>
 
-                                    <div>
-                                        <label for="quantity{{ $asset->asset_id }}">
-                                            数量
-                                        </label>
+                            <p>
+                                「{{ $asset->asset_name }}」の取得数量を入力してください。
+                            </p>
 
-                                        <input type="number" id="quantity{{ $asset->asset_id}}" name="quantity" min="1"
-                                            max="{{ min($asset->stock, $asset->max_request_quantity) }}" value="1" required>
-                                    </div>
+                            <form method="post" action="/assets/acquire">
+                                @csrf
 
-                                    <button type="submit">取得する</button>
+                                <input type="hidden" name="asset_id" value="{{ $asset->asset_id }}">
 
-                                    <button type="button"
-                                        onclick="document.getElementById('acquireModal{{ $asset->asset_id }}').close()">
-                                        キャンセル
-                                    </button>
-                                </form>
-                            </dialog>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="6">消耗品はありません。</td>
-                    </tr>
-                @endforelse
-            </tbody>
+                                <div>
+                                    <label for="quantity{{ $asset->asset_id }}">
+                                        数量
+                                    </label>
 
-        </table>
+                                    <input type="number" id="quantity{{ $asset->asset_id}}" name="quantity" min="1"
+                                        max="{{ min($asset->stock, $asset->max_request_quantity) }}" value="1" required>
+                                </div>
 
-        <div class="pagination-wrapper">
-            {{ $consumableAssetData->links('pagination::bootstrap-4') }}
-        </div>
+                                <button type="submit">取得する</button>
+
+                                <button type="button" class="cancel-button"
+                                    onclick="document.getElementById('acquireModal{{ $asset->asset_id }}').close()">
+                                    キャンセル
+                                </button>
+                            </form>
+                        </dialog>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="6">消耗品はありません。</td>
+                </tr>
+            @endforelse
+        </tbody>
+
+    </table>
+
+    <div class="pagination-wrapper">
+        {{ $consumableAssetData->links('pagination::bootstrap-4') }}
+    </div>
     </div>
 
 @endsection
