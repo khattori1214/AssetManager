@@ -20,10 +20,8 @@ class GenerateAccountingCsv extends Command
         $targetPeriodStart = now()->submonth()->startofMonth();
         $targetPeriodEnd = now()->submonth()->endOfMonth();
         $consumablehistory = new ConsumableHistory();
-        // $csvData = $consumablehistory->historyData($targetPeriodStart,$targetPeriodEnd);
-
+        
         $csvData = $consumablehistory->csvData($targetPeriodStart, $targetPeriodEnd);
-        // $fileName = 'accounting_' . now()->format('Ym') . '.csv';
         // 対象月をファイル名に使用する
         $fileName = 'accounting_'
             . $targetPeriodStart->format('Ym')
