@@ -9,8 +9,6 @@
                 【警告】返却期限を過ぎている資産があります
                 （{{ $overdueCount }}件）。
             </div>
-        @else
-            <div class="success-message">現在、返却期限を超過している資産はありません。</div>
         @endif
 
         <div class="menu-list">
