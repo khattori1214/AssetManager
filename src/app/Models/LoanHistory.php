@@ -151,4 +151,28 @@ class LoanHistory extends Model
             ->exists();
     }
 
+    // 全社員の貸出履歴を表示する
+    public function employeesLoanHistory()
+    {
+        return LoanHistory::join(
+            'assets',
+            'loan_histories.asset_id',
+            '=',
+            'assets.asset_id'
+        )
+            ->join(
+                'loan_categories',
+                'assets.category_id',
+                '=',
+                'loan_categories.category_id'
+            )
+            ->whereNull('loan_histories.return_date')
+            ->select(
+                'assets.asset_name',
+                'loan_categories.category_name',
+                'loan_histories.loan_date',
+                'loan_histories.due_date',
+            )
+            ->get();
+    }
 }

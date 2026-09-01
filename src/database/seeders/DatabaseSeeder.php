@@ -13,6 +13,8 @@ class DatabaseSeeder extends Seeder
             LoanCategorySeeder::class,
             UserSeeder::class,
             AssetSeeder::class,
+            LoanHistorySeeder::class,
+            ConsumableHistorySeeder::class,
         ]);
     }
 }
