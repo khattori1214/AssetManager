@@ -48,4 +48,28 @@ class UsageHistoryController extends Controller
             ->with('error', '返却処理を実行できませんでした。');
     }
 
+    public function currentLoans()
+    {
+        return LoanHistory::join(
+            'assets',
+            'assets.asset_id',
+            '=',
+            'loan_histories.asset_id'
+        )
+            ->join(
+                'users',
+                'users.user_id',
+                '=',
+                'loan_histories.user_id'
+            )
+            ->whereNull('loan_histories.return_date')
+            ->select(
+                'users.user_name',
+                'assets.asset_name',
+                'loan_histories.loan_date',
+                'loan_histories.due_date'
+            )
+            ->get();
+    }
+
 }
