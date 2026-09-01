@@ -42,7 +42,7 @@
                     <td>{{ $asset->max_loan_days }}日</td>
                     <td>
 
-                        <button type="button" onclick="openDeleteModal('{{ $asset->asset_id }}', '{{ $asset->asset_name }}')">
+                        <button type="button" class="cancel-button" onclick="openDeleteModal('{{ $asset->asset_id }}', '{{ $asset->asset_name }}')">
                             削除する
                         </button>
                     </td>
@@ -87,7 +87,7 @@
                             在庫を更新する
                         </button>
 
-                        <button type="button" onclick="openDeleteModal('{{ $asset->asset_id }}', '{{ $asset->asset_name }}')">
+                        <button type="button" class="cancel-button" onclick="openDeleteModal('{{ $asset->asset_id }}', '{{ $asset->asset_name }}')">
                             削除する
                         </button>
                     </td>
