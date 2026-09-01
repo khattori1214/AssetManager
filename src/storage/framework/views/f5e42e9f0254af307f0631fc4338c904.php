@@ -45,7 +45,8 @@
                 <div>
                     <label for="keyword">資産名</label>
 
-                    <input type="text" id="keyword" name="keyword" value="<?php echo e(request('keyword')); ?>" maxlength="50" placeholder="例:PC">
+                    <input type="text" id="keyword" name="keyword" value="<?php echo e(request('keyword')); ?>" maxlength="50"
+                        placeholder="例:PC">
                 </div>
 
                 <div>
@@ -63,6 +64,7 @@
                         </option>
                     </select>
                 </div>
+
 
                 <button type="submit" id="searchBtn">
                     検索
@@ -136,7 +138,7 @@
 
                                     <button type="submit">借りる</button>
 
-                                    <button type="button"
+                                    <button type="button" class="cancel-button"
                                         onclick="document.getElementById('borrowModal<?php echo e($asset->asset_id); ?>').close()">
                                         キャンセル
                                     </button>
@@ -166,6 +168,8 @@
                     <th>NO.</th>
                     <th>品名</th>
                     <th>在庫数</th>
+                    <th>一回の申請上限</th>
+                    <th>月間の申請上限</th>
                     <th>状態</th>
                     <th>操作</th>
                 </tr>
@@ -177,6 +181,8 @@
                         <td><?php echo e($asset->asset_id); ?></td>
                         <td><?php echo e($asset->asset_name); ?></td>
                         <td><?php echo e($asset->stock); ?></td>
+                        <td><?php echo e($asset->max_request_quantity); ?></td>
+                        <td><?php echo e($asset->monthly_request_limit); ?></td>
 
                         <td>
                             <?php if($asset->stock < $asset->min_stock): ?>
@@ -216,7 +222,7 @@
 
                                     <button type="submit">取得する</button>
 
-                                    <button type="button"
+                                    <button type="button" class="cancel-button"
                                         onclick="document.getElementById('acquireModal<?php echo e($asset->asset_id); ?>').close()">
                                         キャンセル
                                     </button>

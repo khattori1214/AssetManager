@@ -102,5 +102,15 @@ class AssetManagementController extends Controller
         return response()->download($path, $csv->file_name);
     }
 
-   
+    // 全社員の貸出履歴を表示する
+    // public function showEmployeesLoanHistory()
+    // {
+    //     $loanhistoryModel=new LoanHistory();
+    //     $showEmployeesHistories=$loanhistoryModel->employeesLoanHistory();
+        
+        
+    //     return ;
+    // }
+
+
 }
