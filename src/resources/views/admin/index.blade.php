@@ -185,7 +185,7 @@
 
                 <button type="submit">登録する</button>
 
-                <button type="button" onclick="document.getElementById('loanRegisterModal').close()">
+                <button type="button" class="cancel-button" onclick="document.getElementById('loanRegisterModal').close()">
                     キャンセル
                 </button>
             </form>
