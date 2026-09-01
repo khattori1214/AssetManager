@@ -65,31 +65,7 @@
                     </select>
                 </div>
 
-                <!-- <div>
-                            <label for="asset_type">状態</label>
-
-                            <select id="asset_type" name="asset_type">
-                                <option value="">すべて</option>
-
-                                <option value="loan" @selected(request('due_date') === 'null')>
-                                    貸出可能
-                                </option>
-
-                                <option value="loan" @selected(request('asset_type') === 'loan')>
-                                    貸出中
-                                </option>
-
-                                <option value="consumable" @selected(request('asset_type') === 'consumable')>
-                                    在庫あり
-                                </option>
-
-                                <option value="consumable" @selected(request('asset_type') === 'consumable')>
-                                    在庫なし
-                                </option>
-
-                                <option value="consumable" @selected(request('asset_type') === 'consumable')>
-                                    要発注
-                                </option> -->
+            
                 </select>
         </div>
 
@@ -192,7 +168,7 @@
             <tr>
                 <th>NO.</th>
                 <th>品名</th>
-                <th>在庫数</th>]
+                <th>在庫数</th>
                 <th>一回の申請上限</th>
                 <th>月間の申請上限</th>
                 <th>状態</th>
