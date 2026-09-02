@@ -59,5 +59,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // 経理連携用CSV出力バッチ処理
     Route::get('/admin/csv/download', [AssetManagementController::class, 'download']);
 
+    // Route::get('/admin/assets/loan',[AssetManagementController::class,'viewhistory']);
 });
 

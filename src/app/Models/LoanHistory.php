@@ -152,7 +152,7 @@ class LoanHistory extends Model
     }
 
     // 全社員の貸出履歴を表示する
-    public function employeesLoanHistory()
+    public function currentEmployeeLoans()
     {
         return LoanHistory::join(
             'assets',
@@ -166,12 +166,21 @@ class LoanHistory extends Model
                 '=',
                 'loan_categories.category_id'
             )
+            ->join(
+                'users',
+                'loan_histories.user_id',
+                '=',
+                'users.user_id'
+            )
             ->whereNull('loan_histories.return_date')
             ->select(
+                'users.user_id',
+                'users.user_name',
                 'assets.asset_name',
                 'loan_categories.category_name',
                 'loan_histories.loan_date',
                 'loan_histories.due_date',
+                'loan_histories.return_date',
             )
             ->get();
     }

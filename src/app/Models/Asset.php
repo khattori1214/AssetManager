@@ -129,7 +129,7 @@ class Asset extends Model
      */
     public function loanAssetData(
         $keyword = null,
-        $assetType = null
+        $assetType = null,
     ) {
 
         $query = Asset::leftJoin(
@@ -153,6 +153,7 @@ class Asset extends Model
             );
         }
 
+
         if ($assetType === 'consumable') {
             $query->whereRaw('1 = 0');
         }
@@ -168,7 +169,8 @@ class Asset extends Model
      */
     public function consumableAssetData(
         $keyword = null,
-        $assetType = null
+        $assetType = null,
+        $status = null,
     ) {
 
         $query = Asset::leftJoin(
@@ -180,7 +182,8 @@ class Asset extends Model
             ->where('assets.asset_type', 'consumable')
             ->select(
                 'assets.*',
-                'loan_categories.category_name'
+                'loan_categories.category_name',
+
             );
 
         if (!empty($keyword)) {
@@ -193,6 +196,22 @@ class Asset extends Model
 
         if ($assetType === 'loan') {
             $query->whereRaw('1 = 0');
+        }
+
+        if ($status === 'consumable_available') {
+            $query->where(
+                'stock',
+                '>',
+                '0',
+            );
+        }
+
+        if ($status === 'consumable_need_to_order') {
+            $query->where(
+                'stock',
+                '>',
+                'min_stock',
+            );
         }
 
         return $query

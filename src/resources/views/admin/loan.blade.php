@@ -1,4 +1,4 @@
-@extends('layouts.app')
+<!-- @extends('layouts.app')
 
 @section('content')
 
@@ -14,7 +14,7 @@
                 <th>状態</th>
             </tr>
 
-            @forelse ($loanHistoryData as $history)
+            @forelse ($showEmployeesHistories as $history)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $history->asset_name }}</td>
@@ -32,4 +32,4 @@
                     </td>
 
 
-@endsection
+@endsection -->

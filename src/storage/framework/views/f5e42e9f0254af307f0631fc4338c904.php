@@ -65,6 +65,34 @@
                     </select>
                 </div>
 
+                <div>
+                    <label for="status">状態</label>
+
+                    <select id="status" name="status">
+                        <option value="">すべて</option>
+
+                        <option value="consumable_available" <?php if(request('status') === 'consumable_available'): echo 'selected'; endif; ?>>
+                            利用可能
+                        </option>
+
+                        <option value="consumable_unavailable" <?php if(request('status') === 'consumable_unavailable'): echo 'selected'; endif; ?>>
+                            在庫切れ
+                        </option>
+
+                        <!-- <option value="loan" <?php if(request('stock') >0): echo 'selected'; endif; ?>>
+                                取得可能
+                            </option>
+
+                            <option value="consumable" <?php if(request('stock') >= 'min_stock'): echo 'selected'; endif; ?>>
+                                要発注
+                            </option> -->
+
+                        <!-- <option value="consumable" <?php if(request('asset_type') === 'consumable'): echo 'selected'; endif; ?>>
+                                在庫無し
+                            </option> -->
+                    </select>
+                </div>
+
 
                 <button type="submit" id="searchBtn">
                     検索

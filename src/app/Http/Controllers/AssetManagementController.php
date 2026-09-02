@@ -30,10 +30,14 @@ class AssetManagementController extends Controller
         $csvModel = new CsvFile();
         $csvData = $csvModel->csvData();
 
+        $currentEmployeeLoans=$loanHistoryModel->currentEmployeeLoans();
+       
+
         return view('admin.index', [
             'loanAssetData' => $loanAssetData,
             'consumableAssetData' => $consumableAssetData,
             'csvData' => $csvData,
+            'currentEmployeeLoans'=>$currentEmployeeLoans,
         ]);
     }
 
@@ -101,15 +105,5 @@ class AssetManagementController extends Controller
 
         return response()->download($path, $csv->file_name);
     }
-
-    // 全社員の貸出履歴を表示する
-    public function showEmployeesLoanHistory()
-    {
-        $loanhistoryModel=new LoanHistory();
-        $showEmployeesHistories=$loanhistoryModel->employeesLoanHistory();
-        
-        
-        return ;
-    }
-
+    
 }

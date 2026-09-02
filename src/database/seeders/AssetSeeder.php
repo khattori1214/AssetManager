@@ -25,6 +25,17 @@ class AssetSeeder extends Seeder
             'monthly_request_limit' => null,
         ]);
 
+         Asset::create([
+            'asset_name' => 'Lenovo PC',
+            'category_id' => 2,
+            'asset_type' => 'loan',
+            'stock' => null,
+            'min_stock' => null,
+            'unit' => '台',
+            'max_request_quantity' => null,
+            'monthly_request_limit' => null,
+        ]);
+
         // 消耗品
         Asset::create([
             'asset_name' => 'ボールペン',
@@ -34,6 +45,17 @@ class AssetSeeder extends Seeder
             'min_stock' => 5,
             'unit' => '本',
             'max_request_quantity' => 2,
+            'monthly_request_limit' => 1,
+        ]);
+
+        Asset::create([
+            'asset_name' => 'ノート',
+            'category_id' => null,
+            'asset_type' => 'consumable',
+            'stock' => 5,
+            'min_stock' => 1,
+            'unit' => '冊',
+            'max_request_quantity' => 5,
             'monthly_request_limit' => 1,
         ]);
     }
