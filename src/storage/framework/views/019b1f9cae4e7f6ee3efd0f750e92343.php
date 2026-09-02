@@ -40,7 +40,7 @@
                     <td><?php echo e($asset->max_loan_days); ?>日</td>
                     <td>
 
-                        <button type="button" onclick="openDeleteModal('<?php echo e($asset->asset_id); ?>', '<?php echo e($asset->asset_name); ?>')">
+                        <button type="button" class="cancel-button" onclick="openDeleteModal('<?php echo e($asset->asset_id); ?>', '<?php echo e($asset->asset_name); ?>')">
                             削除する
                         </button>
                     </td>
@@ -86,7 +86,7 @@
                             在庫を更新する
                         </button>
 
-                        <button type="button" onclick="openDeleteModal('<?php echo e($asset->asset_id); ?>', '<?php echo e($asset->asset_name); ?>')">
+                        <button type="button" class="cancel-button" onclick="openDeleteModal('<?php echo e($asset->asset_id); ?>', '<?php echo e($asset->asset_name); ?>')">
                             削除する
                         </button>
                     </td>
@@ -138,7 +138,8 @@
 
                     <button type="submit">更新する</button>
 
-                    <button type="button" onclick="document.getElementById('stockModal-<?php echo e($asset->asset_id); ?>').close()">
+                    <button type="button" class="cancel-button"
+                        onclick="document.getElementById('stockModal-<?php echo e($asset->asset_id); ?>').close()">
                         キャンセル
                     </button>
 
@@ -184,7 +185,7 @@
 
                 <button type="submit">登録する</button>
 
-                <button type="button" onclick="document.getElementById('loanRegisterModal').close()">
+                <button type="button" class="cancel-button" onclick="document.getElementById('loanRegisterModal').close()">
                     キャンセル
                 </button>
             </form>
@@ -237,7 +238,8 @@
 
                 <button type="submit">登録する</button>
 
-                <button type="button" onclick="document.getElementById('consumableRegisterModal').close()">
+                <button type="button" class="cancel-button"
+                    onclick="document.getElementById('consumableRegisterModal').close()">
                     キャンセル
                 </button>
             </form>
@@ -265,7 +267,7 @@
                     削除する
                 </button>
 
-                <button type="button" onclick="document.getElementById('deleteModal').close()">
+                <button type="button" class="cancel-button" onclick="document.getElementById('deleteModal').close()">
                     キャンセル
                 </button>
 

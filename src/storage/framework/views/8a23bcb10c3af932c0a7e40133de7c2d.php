@@ -67,7 +67,7 @@
 
                                 <button type="submit">はい</button>
 
-                                <button type="button"
+                                <button type="button" class="cancel-button"
                                     onclick="document.getElementById('returnModal<?php echo e($history->loan_history_id); ?>').close()">
                                     キャンセル
                                 </button>
