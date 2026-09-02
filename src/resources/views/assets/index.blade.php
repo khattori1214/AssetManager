@@ -65,6 +65,38 @@
                     </select>
                 </div>
 
+                <div>
+                    <label for="status">状態</label>
+
+                    <select id="status" name="status">
+                        <option value="">すべて</option>
+
+                        <option value="consumable_available" @selected(request('status') === 'consumable_available')>
+                            取得可能
+                        </option>
+
+                        <option value="consumable_need_to_order" @selected(request('status') === 'consumable_unavailable')>
+                            要発注
+                        </option>
+
+                        <option value="consumable_unavailable" @selected(request('status') === 'consumable_unavailable')>
+                            取得不可
+                        </option>
+
+                        <!-- <option value="loan" @selected(request('stock') >0)>
+                                取得可能
+                            </option>
+
+                            <option value="consumable" @selected(request('stock') >= 'min_stock')>
+                                要発注
+                            </option> -->
+
+                        <!-- <option value="consumable" @selected(request('asset_type') === 'consumable')>
+                                在庫無し
+                            </option> -->
+                    </select>
+                </div>
+
 
                 <button type="submit" id="searchBtn">
                     検索

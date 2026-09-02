@@ -20,13 +20,13 @@ class AssetApplicationController extends Controller
 
         $keyword = $request->input('keyword');
         $assetType = $request->input('asset_type');
+        $status = $request->input('status');
 
         $assetModel = new Asset();
         $loanHistory = new LoanHistory();
 
-
         $loanAssetData = $assetModel->loanAssetData($keyword, $assetType);
-        $consumableAssetData = $assetModel->consumableAssetData($keyword, $assetType);
+        $consumableAssetData = $assetModel->consumableAssetData($keyword, $assetType,$status);
 
         $overdueCount = $loanHistory->countOverdue(Auth::id());
         $isLocked = $loanHistory->isLoanLocked(Auth::id());
