@@ -25,7 +25,7 @@ class AssetApplicationController extends Controller
         $assetModel = new Asset();
         $loanHistory = new LoanHistory();
 
-        $loanAssetData = $assetModel->loanAssetData($keyword, $assetType);
+        $loanAssetData = $assetModel->loanAssetData($keyword, $assetType,$status);
         $consumableAssetData = $assetModel->consumableAssetData($keyword, $assetType,$status);
 
         $overdueCount = $loanHistory->countOverdue(Auth::id());

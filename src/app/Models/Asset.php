@@ -130,6 +130,7 @@ class Asset extends Model
     public function loanAssetData(
         $keyword = null,
         $assetType = null,
+        $status = null,
     ) {
 
         $query = Asset::leftJoin(
@@ -137,12 +138,20 @@ class Asset extends Model
             'assets.category_id',
             '=',
             'loan_categories.category_id'
-        )
+        )->leftJoin('loan_histories', function ($join) {
+            $join->on(
+                'loan_histories.asset_id',
+                '=',
+                'assets.asset_id'
+            )
+                ->whereNull('loan_histories.return_date');
+        })
             ->where('assets.asset_type', 'loan')
             ->select(
                 'assets.*',
                 'loan_categories.category_name',
-                'loan_categories.max_loan_days'
+                'loan_categories.max_loan_days',
+
             );
 
         if (!empty($keyword)) {
@@ -156,6 +165,18 @@ class Asset extends Model
 
         if ($assetType === 'consumable') {
             $query->whereRaw('1 = 0');
+        }
+
+        if ($status === 'loan_available') {
+            $query->whereNull(
+                'loan_histories.loan_history_id'
+            );
+        }
+
+        if ($status === 'loan_unavailable') {
+            $query->wherenotNull(
+                'loan_histories.loan_history_id',
+            );
         }
 
         return $query
@@ -172,7 +193,6 @@ class Asset extends Model
         $assetType = null,
         $status = null,
     ) {
-
         $query = Asset::leftJoin(
             'loan_categories',
             'assets.category_id',
@@ -183,7 +203,6 @@ class Asset extends Model
             ->select(
                 'assets.*',
                 'loan_categories.category_name',
-
             );
 
         if (!empty($keyword)) {
@@ -211,6 +230,14 @@ class Asset extends Model
                 'stock',
                 '>',
                 'min_stock',
+            );
+        }
+
+        if ($status === 'consumable_unavailable') {
+            $query->where(
+                'stock',
+                '=',
+                '0'
             );
         }
 

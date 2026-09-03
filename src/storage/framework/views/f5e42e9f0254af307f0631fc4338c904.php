@@ -71,12 +71,28 @@
                     <select id="status" name="status">
                         <option value="">すべて</option>
 
+                        <optgroup label="貸出資産">
+
+                        <option value="loan_available" <?php if(request('status') === 'loan_available'): echo 'selected'; endif; ?>>
+                            貸出可能
+                        </option>
+
+                        <option value="loan_unavailable" <?php if(request('status') === 'loan_unavailable'): echo 'selected'; endif; ?>>
+                            貸出中
+                        </option>
+
+                        <optgroup label="消耗品">
+
                         <option value="consumable_available" <?php if(request('status') === 'consumable_available'): echo 'selected'; endif; ?>>
-                            利用可能
+                            取得可能
+                        </option>
+
+                        <option value="consumable_need_to_order" <?php if(request('status') === 'consumable_unavailable'): echo 'selected'; endif; ?>>
+                            要発注
                         </option>
 
                         <option value="consumable_unavailable" <?php if(request('status') === 'consumable_unavailable'): echo 'selected'; endif; ?>>
-                            在庫切れ
+                            取得不可
                         </option>
 
                         <!-- <option value="loan" <?php if(request('stock') >0): echo 'selected'; endif; ?>>

@@ -71,6 +71,18 @@
                     <select id="status" name="status">
                         <option value="">すべて</option>
 
+                        <optgroup label="貸出資産">
+
+                        <option value="loan_available" @selected(request('status') === 'loan_available')>
+                            貸出可能
+                        </option>
+
+                        <option value="loan_unavailable" @selected(request('status') === 'loan_unavailable')>
+                            貸出中
+                        </option>
+
+                        <optgroup label="消耗品">
+
                         <option value="consumable_available" @selected(request('status') === 'consumable_available')>
                             取得可能
                         </option>
