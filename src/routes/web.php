@@ -59,6 +59,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // 経理連携用CSV出力バッチ処理
     Route::get('/admin/csv/download', [AssetManagementController::class, 'download']);
 
-    // Route::get('/admin/assets/loan',[AssetManagementController::class,'viewhistory']);
+    // 新規ユーザー登録画面の表示
+    Route::get('/admin/user/create',[AssetManagementController::class,'userIndex']);
+
+    Route::post('/admin/user/create',[AssetManagementController::class,'createUser']);
 });
 

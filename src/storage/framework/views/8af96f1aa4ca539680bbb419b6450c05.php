@@ -62,6 +62,12 @@
                         </a>
                     </li>
 
+                    <li>
+                        <a href="/admin/user/create">
+                            ユーザー登録画面<br>【管理者のみ】
+                        </a>
+                    </li>
+
                 <?php endif; ?>
 
             </ul>

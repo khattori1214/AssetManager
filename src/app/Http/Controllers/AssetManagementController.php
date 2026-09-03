@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Asset;
+use App\Models\User;
 use App\Models\LoanHistory;
 use Illuminate\Http\Request;
 use App\Models\CsvFile;
@@ -30,14 +31,14 @@ class AssetManagementController extends Controller
         $csvModel = new CsvFile();
         $csvData = $csvModel->csvData();
 
-        $currentEmployeeLoans=$loanHistoryModel->currentEmployeeLoans();
-       
+        $currentEmployeeLoans = $loanHistoryModel->currentEmployeeLoans();
+
 
         return view('admin.index', [
             'loanAssetData' => $loanAssetData,
             'consumableAssetData' => $consumableAssetData,
             'csvData' => $csvData,
-            'currentEmployeeLoans'=>$currentEmployeeLoans,
+            'currentEmployeeLoans' => $currentEmployeeLoans,
         ]);
     }
 
@@ -95,6 +96,35 @@ class AssetManagementController extends Controller
             ->with('success', '在庫情報を更新しました。');
     }
 
+    /**
+     * 管理者用画面
+     * 一覧表示
+     */
+
+    public function userIndex(){
+        return view('admin.user-create');
+    }
+
+    // **
+    //  * 管理者用画面
+    //  * 新しいユーザーを登録する
+    //  */
+    public function createUser(Request $request)
+    {
+        $createUser = $request->validate([
+            'employee_no' => ['integer'],
+            'user_name' => ['required', 'string', 'max:32'],
+            'email' => ['max:225'],
+            'password' => ['max:255'],
+            'role_id' => ['integer'],
+        ]);
+        $userModel = new User();
+        $userModel->createUser($createUser);
+
+        return redirect('/admin/user/create')
+            ->with('success', '登録が完了しました。');
+    }
+
 
     // 経理連携用CSVファイルをダウンロードする
     public function download()
@@ -105,5 +135,5 @@ class AssetManagementController extends Controller
 
         return response()->download($path, $csv->file_name);
     }
-    
+
 }
