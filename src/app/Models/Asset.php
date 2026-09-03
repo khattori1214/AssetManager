@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class Asset extends Model
 {
@@ -25,7 +26,7 @@ class Asset extends Model
      * 資産一覧・申請画面
      * 資産と貸出カテゴリを結合して一覧を取得する
      */
-    public function assetData()
+    public function assetData(): LengthAwarePaginator
     {
         return Asset::leftJoin(
             'loan_categories',
@@ -43,12 +44,14 @@ class Asset extends Model
 
 
     /**
-     * 資産一覧・申請画面
-     * 消耗品の在庫を減算する
+     * Summary of decreaseStock
+     * @param Asset $asset
+     * @param mixed $quantity
+     * @return int
      */
-    public function decreaseStock($assetId, $quantity)
+    public function decreaseStock(Asset $asset, int $quantity): int
     {
-        return Asset::where('asset_id', $assetId)
+        return Asset::where('asset_id', $asset->asset_id)
             ->where('asset_type', 'consumable')
             ->where('stock', '>=', $quantity)
             ->decrement('stock', $quantity);
@@ -58,7 +61,7 @@ class Asset extends Model
      * 管理者用の資産登録・在庫管理画面
      * 資産情報を登録する
      */
-    public function registerAsset($registerAsset)
+    public function registerAsset(array $registerAsset): Asset
     {
         return Asset::create($registerAsset);
     }
@@ -66,7 +69,7 @@ class Asset extends Model
     /**
      * 資産IDから貸出カテゴリ情報付きで資産を取得する
      */
-    public function findAsset($assetId)
+    public function findLoan(int $assetId): ?Asset
     {
         return Asset::join(
             'loan_categories',
@@ -86,7 +89,7 @@ class Asset extends Model
     /**
      * 消耗品情報を取得する
      */
-    public function findConsumable($assetId)
+    public function findConsumable(int $assetId): ?Asset
     {
         return Asset::where('assets.asset_id', $assetId)
             ->where('assets.asset_type', 'consumable')
@@ -102,18 +105,18 @@ class Asset extends Model
      * 管理者画面
      * 指定した資産を削除する
      */
-    public function deleteAsset($assetId)
+    public function deleteAsset(int $id): int
     {
-        return Asset::where('asset_id', $assetId)->delete();
+        return Asset::where('asset_id', $id)->delete();
     }
 
     /**
      * 管理者画面
      * 消耗品の在庫情報を更新する
      */
-    public function updateConsumableStock($assetId, array $validated)
+    public function updateConsumableStock(int $id, array $validated): bool
     {
-        $asset = Asset::where('asset_id', $assetId)
+        $asset = Asset::where('asset_id', $id)
             ->where('asset_type', 'consumable')
             ->firstOrFail();
 
@@ -128,10 +131,10 @@ class Asset extends Model
      * 貸出資産を10件ずつ取得する
      */
     public function loanAssetData(
-        $keyword = null,
-        $assetType = null,
-        $status = null,
-    ) {
+        ?string $keyword = null,
+        ?string $assetType = null,
+        ?string $status = null,
+    ): LengthAwarePaginator {
 
         $query = Asset::leftJoin(
             'loan_categories',
@@ -189,10 +192,10 @@ class Asset extends Model
      * 消耗品を10件ずつ取得する
      */
     public function consumableAssetData(
-        $keyword = null,
-        $assetType = null,
-        $status = null,
-    ) {
+        ?string $keyword = null,
+        ?string $assetType = null,
+        ?string $status = null,
+    ): LengthAwarePaginator {
         $query = Asset::leftJoin(
             'loan_categories',
             'assets.category_id',

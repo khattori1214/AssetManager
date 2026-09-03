@@ -2,7 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\CollectedBy;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Collection;
+
 
 
 class LoanHistory extends Model
@@ -35,7 +40,7 @@ class LoanHistory extends Model
     /**
      * ログインユーザーが現在借りている資産を取得する
      */
-    public function historyData($userId)
+    public function historyData(int $userId): LengthAwarePaginator
     {
         return LoanHistory::join(
             'assets',
@@ -64,7 +69,7 @@ class LoanHistory extends Model
     /**
      * ログインユーザーが過去に借りた資産を取得する
      */
-    public function pastHistoryData($userId)
+    public function pastHistoryData(int $userId): LengthAwarePaginator
     {
         return LoanHistory::join(
             'assets',
@@ -94,9 +99,8 @@ class LoanHistory extends Model
     /**
      * 指定した貸出履歴の返却日を現在日時に更新する
      */
-    public function returnAsset($loanHistoryId, $userId)
+    public function returnAsset(int $loanHistoryId, int $userId): int
     {
-
         return LoanHistory::where('loan_history_id', $loanHistoryId)
             ->where('user_id', $userId)
             ->whereNull('return_date')
@@ -107,7 +111,7 @@ class LoanHistory extends Model
     }
 
     // 貸与資産貸出処理
-    public function borrow($userId, $assetId, $dueDate)
+    public function borrow(int $userId, int $assetId, CarbonInterface $dueDate): LoanHistory
     {
         $borrowResister = LoanHistory::create([
             'user_id' => $userId,
@@ -121,7 +125,7 @@ class LoanHistory extends Model
     /**
      * 指定した資産が貸出中か判定する
      */
-    public function isBorrowed($assetId)
+    public function isBorrowed(int $assetId): bool
     {
         return LoanHistory::where('asset_id', $assetId)
             ->whereNull('return_date')
@@ -130,20 +134,20 @@ class LoanHistory extends Model
     /**
      * 期限超過警告メール
      */
-    public function overdueUsers()
+    public function overdueUsers(): Collection
     {
         return LoanHistory::join('users', 'users.user_id', '=', 'loan_histories.user_id')
             ->join('assets', 'assets.asset_id', '=', 'loan_histories.asset_id')
             ->wherenull('return_date')
             ->where('due_date', '<', today())
-            ->select('users.email', 'users.user_name', 'loan_histories.due_date','assets.asset_name')
+            ->select('users.email', 'users.user_name', 'loan_histories.due_date', 'assets.asset_name')
             ->get();
     }
 
     /**
      * 7日以上返却期限を超過している貸出があるか
      */
-    public function isLoanLocked($userId)
+    public function isLoanLocked(int $userId): bool
     {
         return LoanHistory::where('user_id', $userId)
             ->wherenull('return_date')
@@ -152,7 +156,7 @@ class LoanHistory extends Model
     }
 
     // 全社員の貸出履歴を表示する
-    public function currentEmployeeLoans()
+    public function currentEmployeeLoans():Collection
     {
         return LoanHistory::join(
             'assets',

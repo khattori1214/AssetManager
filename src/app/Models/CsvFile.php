@@ -1,6 +1,7 @@
 <?php
 namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 class CsvFile extends Model
 {
    const CREATED_AT = null;
@@ -16,7 +17,7 @@ class CsvFile extends Model
       'generated_at',
    ];
    // 経理連携用CSV出力バッチ処理
-   public function csvData()
+   public function csvData(): Collection
    {
       return CsvFile::orderByDesc('generated_at')->get();
    }

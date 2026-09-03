@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Models;
-
+use Carbon\CarbonInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ConsumableHistory extends Model
 {
@@ -21,7 +23,7 @@ class ConsumableHistory extends Model
      * 利用履歴・返却画面
      * ログインユーザーの消耗品取得履歴を取得する
      */
-    public function historyData($userId)
+    public function historyData(int $userId): LengthAwarePaginator
     {
         return ConsumableHistory::join(
             'assets',
@@ -56,7 +58,7 @@ class ConsumableHistory extends Model
         int $userId,
         int $assetId,
         int $quantity
-    ) {
+    ): ConsumableHistory {
         return ConsumableHistory::create([
             'user_id' => $userId,
             'asset_id' => $assetId,
@@ -85,7 +87,7 @@ class ConsumableHistory extends Model
      * 経理連携CSV出力バッチ
      * 指定期間の消耗品申請データを取得する
      */
-    public function csvData($targetPeriodStart, $targetPeriodEnd)
+    public function csvData(CarbonInterface $targetPeriodStart, CarbonInterface $targetPeriodEnd): Collection
     {
         return ConsumableHistory::join(
             'users',

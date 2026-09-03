@@ -56,6 +56,7 @@ class AssetApplicationController extends Controller
         ]);
 
         $asset = $assetModel->findConsumable($validated['asset_id']);
+        $quantity = $validated['quantity'];
 
         if (!$asset) {
             return back()->with('error', __('messages.asset.asset_not_found'));
@@ -90,17 +91,17 @@ class AssetApplicationController extends Controller
             );
         }
 
-        DB::transaction(function () use ($history, $assetModel, $validated) {
+        DB::transaction(function () use ($history, $assetModel, $asset, $quantity ) {
 
             $history->registerHistory(
                 Auth::id(),
-                $validated['asset_id'],
-                $validated['quantity']
+                $asset->asset_id,
+                $quantity
             );
 
             $assetModel->decreaseStock(
-                $validated['asset_id'],
-                $validated['quantity']
+                $asset,
+                $quantity
             );
         });
 
@@ -124,7 +125,7 @@ class AssetApplicationController extends Controller
         $assetModel = new Asset();
         $loanHistory = new LoanHistory();
 
-        $asset = $assetModel->findAsset($assetId);
+        $asset = $assetModel->findLoan($assetId);
 
         if (!$asset) {
             return back()->with('error', __('messages.asset.asset_not_found'));
