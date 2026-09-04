@@ -23,7 +23,7 @@ class ConsumableHistory extends Model
      * 利用履歴・返却画面
      * ログインユーザーの消耗品取得履歴を取得する
      */
-    public function historyData(int $userId): LengthAwarePaginator
+    public static function historyData(User $user): LengthAwarePaginator
     {
         return ConsumableHistory::join(
             'assets',
@@ -54,9 +54,9 @@ class ConsumableHistory extends Model
      * 資産一覧・申請画面
      * 消耗品取得履歴を登録する
      */
-    public function registerHistory(
-        int $userId,
-        int $assetId,
+    public static function registerHistory(
+        User $user,
+        Asset $asset,
         int $quantity
     ): ConsumableHistory {
         return ConsumableHistory::create([
@@ -72,9 +72,9 @@ class ConsumableHistory extends Model
      * 資産一覧・申請画面
      * ログインユーザーによる対象消耗品の当月申請回数を取得する
      */
-    public function requestedCountThisMonth(
-        int $userId,
-        int $assetId
+    public static function requestedCountThisMonth(
+        User $user,
+        Asset $asset
     ): int {
         return ConsumableHistory::where('user_id', $userId)
             ->where('asset_id', $assetId)
@@ -87,7 +87,7 @@ class ConsumableHistory extends Model
      * 経理連携CSV出力バッチ
      * 指定期間の消耗品申請データを取得する
      */
-    public function csvData(CarbonInterface $targetPeriodStart, CarbonInterface $targetPeriodEnd): Collection
+    public static function csvData(CarbonInterface $targetPeriodStart, CarbonInterface $targetPeriodEnd): Collection
     {
         return ConsumableHistory::join(
             'users',

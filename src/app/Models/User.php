@@ -31,7 +31,7 @@ class User extends Authenticatable
         ];
     }
 
-    public function createUser($createUser)
+    public function createUser(array $createUser): User
     {
         return User::create($createUser);
     }
