@@ -30,12 +30,14 @@ class UsageHistoryController extends Controller
     public function returnAsset(Request $request)
     {
         $loanHistoryId = $request->input('loan_history_id');
-        
-        $userId = Auth::id();
         $user = Auth::user();
+        $loanHistory=LoanHistory::where('loan_history_id', $loanHistoryId)
+            ->where('user_id', $user->user_id)
+            ->whereNull('return_date')
+            ->first();
 
-        $updated = loanHistory::returnAsset(
-            $user
+        $updated = $loanHistory->returnAsset(
+            $user,
         );
 
         if ($updated) {
