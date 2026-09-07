@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\AcquireAssetRequest;
 use App\Http\Requests\BorrowAssetRequest;
-
+use Exception;
 
 class AssetApplicationController extends Controller
 {
@@ -24,10 +24,10 @@ class AssetApplicationController extends Controller
         $assetType = $request->input('asset_type');
         $status = $request->input('status');
 
-        $loanAssetData = Asset::loanAssetData($keyword, $assetType,$status);
-        $consumableAssetData = Asset::consumableAssetData($keyword, $assetType,$status);
+        $loanAssetData = Asset::loanAssetData($keyword, $assetType, $status);
+        $consumableAssetData = Asset::consumableAssetData($keyword, $assetType, $status);
 
-        $user=Auth::user();
+        $user = Auth::user();
         $overdueCount = LoanHistory::countOverdue($user);
         $isLocked = LoanHistory::isLoanLocked($user);
 
@@ -48,9 +48,9 @@ class AssetApplicationController extends Controller
     public function acquire(AcquireAssetRequest $request)
     {
         $validated = $request->validated();
-        $assetId = $validated->get('asset_id');
+        $assetId = $validated['asset_id'];
         $asset = Asset::findConsumable($assetId);
-        $user=Auth::user();
+        $user = Auth::user();
         $quantity = $validated['quantity'];
 
         if (!$asset) {
@@ -86,7 +86,7 @@ class AssetApplicationController extends Controller
             );
         }
 
-        DB::transaction(function () use ($asset, $user, $quantity ) {
+        DB::transaction(function () use ($asset, $user, $quantity) {
 
             ConsumableHistory::registerHistory(
                 $user,
@@ -110,9 +110,9 @@ class AssetApplicationController extends Controller
     public function borrow(BorrowAssetRequest $request)
     {
         $validated = $request->validated();
-        $user=Auth::user();
+        $user = Auth::user();
         $userId = $user->user_id;
-        $assetId=$validated['asset_id'];
+        $assetId = $validated['asset_id'];
         $asset = Asset::findLoan($assetId);
 
         if (!$asset) {

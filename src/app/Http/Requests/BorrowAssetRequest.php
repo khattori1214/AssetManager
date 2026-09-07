@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class BorrowAssetRequest extends FormRequest
 {
@@ -26,7 +27,8 @@ class BorrowAssetRequest extends FormRequest
             'asset_id' => [
                 'required',
                 'integer',
-                'exists:assets,asset_id',
+                Rule::exists('assets', 'asset_id')
+                    ->where('asset_type', 'loan'),
             ],
         ];
     }
