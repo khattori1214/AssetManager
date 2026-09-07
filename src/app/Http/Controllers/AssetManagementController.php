@@ -17,21 +17,17 @@ class AssetManagementController extends Controller
      */
     public function index()
     {
-        $assetModel = new Asset();
-        $loanHistoryModel = new LoanHistory();
 
-        $loanAssetData = $assetModel->loanAssetData();
-        $consumableAssetData = $assetModel->consumableAssetData();
+        $loanAssetData = Asset::loanAssetData();
+        $consumableAssetData = Asset::consumableAssetData();
 
         foreach ($loanAssetData as $asset) {
-            $asset->isBorrowed = $loanHistoryModel->isBorrowed($asset->asset_id);
+            $asset->isBorrowed = LoanHistory::isBorrowed($asset);
         }
 
+        $csvData = CsvFile::csvData();
 
-        $csvModel = new CsvFile();
-        $csvData = $csvModel->csvData();
-
-        $currentEmployeeLoans = $loanHistoryModel->currentEmployeeLoans();
+        $currentEmployeeLoans = LoanHistory::currentEmployeeLoans();
 
 
         return view('admin.index', [
@@ -58,8 +54,7 @@ class AssetManagementController extends Controller
             'max_request_quantity' => ['nullable', 'integer', 'min:1'],
             'monthly_request_limit' => ['nullable', 'integer', 'min:1'],
         ]);
-        $assetModel = new Asset();
-        $assetModel->registerAsset($registerAsset);
+        Asset::registerAsset($registerAsset);
 
         return redirect('/admin')
             ->with('success', '登録が完了しました。');
@@ -69,28 +64,28 @@ class AssetManagementController extends Controller
      * 管理者用画面
      * 指定した資産を削除する
      */
-    public function destroy($id)
-    {
-        $assetModel = new Asset();
-        $assetModel->deleteAsset($id);
+    // public function destroy($id)
+    // {
+    //     $assetModel = new Asset();
+    //     $assetModel->deleteAsset($id);
 
-        return redirect('/admin')
-            ->with('success', '削除が完了しました。');
-    }
+    //     return redirect('/admin')
+    //         ->with('success', '削除が完了しました。');
+    // }
 
     /**
      * 管理者用画面
      * 消耗品の在庫数を更新する
      */
-    public function updateStock(Request $request, $id)
+    public function updateStock(Request $request, Asset $asset)
     {
         $validated = $request->validate([
             'stock' => ['required', 'integer', 'min:0'],
             'min_stock' => ['required', 'integer', 'min:0'],
         ]);
 
-        $assetModel = new Asset();
-        $assetModel->updateConsumableStock($id, $validated);
+        // $asset = new Asset();
+        $asset->updateConsumableStock($validated);
 
         return redirect('/admin')
             ->with('success', '在庫情報を更新しました。');
@@ -118,8 +113,8 @@ class AssetManagementController extends Controller
             'password' => ['max:255'],
             'role_id' => ['integer'],
         ]);
-        $userModel = new User();
-        $userModel->createUser($createUser);
+       
+        User::createUser($createUser);
 
         return redirect('/admin/user/create')
             ->with('success', '登録が完了しました。');

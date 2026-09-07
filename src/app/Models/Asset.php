@@ -23,35 +23,13 @@ class Asset extends Model
     ];
 
     /**
-     * 資産一覧・申請画面
-     * 資産と貸出カテゴリを結合して一覧を取得する
-     */
-    public function assetData(): LengthAwarePaginator
-    {
-        return Asset::leftJoin(
-            'loan_categories',
-            'assets.category_id',
-            '=',
-            'loan_categories.category_id'
-        )
-            ->select(
-                'assets.*',
-                'loan_categories.category_name',
-                'loan_categories.max_loan_days'
-            )
-            ->paginate(10);
-    }
-
-
-    /**
-     * Summary of decreaseStock
-     * @param Asset $asset
+     * Summary of decreaseStock   
      * @param mixed $quantity
      * @return int
      */
-    public function decreaseStock(Asset $asset, int $quantity): int
+    public function decreaseStock(int $quantity): int
     {
-        return Asset::where('asset_id', $asset->asset_id)
+        return Asset::where('asset_id',$this->asset_id)
             ->where('asset_type', 'consumable')
             ->where('stock', '>=', $quantity)
             ->decrement('stock', $quantity);
@@ -61,7 +39,7 @@ class Asset extends Model
      * 管理者用の資産登録・在庫管理画面
      * 資産情報を登録する
      */
-    public function registerAsset(array $registerAsset): Asset
+    public static function registerAsset(array $registerAsset): Asset
     {
         return Asset::create($registerAsset);
     }
@@ -69,7 +47,7 @@ class Asset extends Model
     /**
      * 資産IDから貸出カテゴリ情報付きで資産を取得する
      */
-    public function findLoan(int $assetId): ?Asset
+    public static function findLoan(int $assetId): ?Asset
     {
         return Asset::join(
             'loan_categories',
@@ -89,7 +67,7 @@ class Asset extends Model
     /**
      * 消耗品情報を取得する
      */
-    public function findConsumable(int $assetId): ?Asset
+    public static function findConsumable(int $assetId): ?Asset
     {
         return Asset::where('assets.asset_id', $assetId)
             ->where('assets.asset_type', 'consumable')
@@ -101,26 +79,16 @@ class Asset extends Model
             ->first();
     }
 
-    /**
-     * 管理者画面
-     * 指定した資産を削除する
-     */
-    public function deleteAsset(int $id): int
-    {
-        return Asset::where('asset_id', $id)->delete();
-    }
 
     /**
      * 管理者画面
      * 消耗品の在庫情報を更新する
+     * @param array $validated
+     * @return bool
      */
-    public function updateConsumableStock(int $id, array $validated): bool
+    public function updateConsumableStock(array $validated): bool
     {
-        $asset = Asset::where('asset_id', $id)
-            ->where('asset_type', 'consumable')
-            ->firstOrFail();
-
-        return $asset->update([
+        return $this->update([
             'stock' => $validated['stock'],
             'min_stock' => $validated['min_stock'],
         ]);
@@ -130,7 +98,7 @@ class Asset extends Model
      * 管理者画面
      * 貸出資産を10件ずつ取得する
      */
-    public function loanAssetData(
+    public static function loanAssetData(
         ?string $keyword = null,
         ?string $assetType = null,
         ?string $status = null,
@@ -191,7 +159,7 @@ class Asset extends Model
      * 管理者画面
      * 消耗品を10件ずつ取得する
      */
-    public function consumableAssetData(
+    public static function consumableAssetData(
         ?string $keyword = null,
         ?string $assetType = null,
         ?string $status = null,

@@ -24,8 +24,7 @@ class SendWarningEmail extends Command
         $targetPeriodStart = now()->submonth()->startofMonth();
         $targetPeriodEnd = now()->submonth()->endOfMonth();
 
-        $loanhistory = new LoanHistory();
-        $users = $loanhistory->overdueUsers();
+        $users = loanhistory::overdueUsers();
         foreach ($users as $user) {
             Mail::to($user->email)
                 ->send(new WarningMail($user));

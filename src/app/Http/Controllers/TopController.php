@@ -10,9 +10,9 @@ class TopController extends Controller
     public function index()
     {
         $loanHistory = new LoanHistory();
-        $userId = Auth::id();
+        $user=Auth::user();
         
-        $overdueCount = $loanHistory->countOverdue($userId);
+        $overdueCount = $loanHistory->countOverdue($user);
         return view('top.index', ['overdueCount' => $overdueCount]);
     }
 

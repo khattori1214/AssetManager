@@ -19,9 +19,8 @@ class GenerateAccountingCsv extends Command
     {
         $targetPeriodStart = now()->submonth()->startofMonth();
         $targetPeriodEnd = now()->submonth()->endOfMonth();
-        $consumablehistory = new ConsumableHistory();
         
-        $csvData = $consumablehistory->csvData($targetPeriodStart, $targetPeriodEnd);
+        $csvData = Consumablehistory::csvData($targetPeriodStart, $targetPeriodEnd);
         // 対象月をファイル名に使用する
         $fileName = 'accounting_'
             . $targetPeriodStart->format('Ym')

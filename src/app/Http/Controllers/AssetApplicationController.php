@@ -22,18 +22,16 @@ class AssetApplicationController extends Controller
         $assetType = $request->input('asset_type');
         $status = $request->input('status');
 
-        $assetModel = new Asset();
-        $loanHistory = new LoanHistory();
+        $loanAssetData = Asset::loanAssetData($keyword, $assetType,$status);
+        $consumableAssetData = Asset::consumableAssetData($keyword, $assetType,$status);
 
-        $loanAssetData = $assetModel->loanAssetData($keyword, $assetType,$status);
-        $consumableAssetData = $assetModel->consumableAssetData($keyword, $assetType,$status);
-
-        $overdueCount = $loanHistory->countOverdue(Auth::id());
-        $isLocked = $loanHistory->isLoanLocked(Auth::id());
+        $user=Auth::user();
+        $overdueCount = LoanHistory::countOverdue($user);
+        $isLocked = LoanHistory::isLoanLocked($user);
 
         foreach ($loanAssetData as $asset) {
             $asset->is_borrowed =
-                $loanHistory->isBorrowed($asset->asset_id);
+                LoanHistory::isBorrowed($asset);
         }
 
         return view('assets.index', [
@@ -47,15 +45,13 @@ class AssetApplicationController extends Controller
 
     public function acquire(Request $request)
     {
-        $assetModel = new Asset();
-        $history = new ConsumableHistory();
-
         $validated = $request->validate([
             'asset_id' => ['required', 'integer'],
             'quantity' => ['required', 'integer', 'min:1'],
         ]);
-
-        $asset = $assetModel->findConsumable($validated['asset_id']);
+        $assetId=$validated['asset_id'];
+        $asset = Asset::findConsumable($assetId);
+        $user=Auth::user();
         $quantity = $validated['quantity'];
 
         if (!$asset) {
@@ -71,9 +67,9 @@ class AssetApplicationController extends Controller
         }
 
         // 月1回制限
-        $requestedCount = $history->requestedCountThisMonth(
-            Auth::id(),
-            $validated['asset_id']
+        $requestedCount = ConsumableHistory::requestedCountThisMonth(
+            $user,
+            $asset
         );
 
         if ($requestedCount >= $asset->monthly_request_limit) {
@@ -91,17 +87,16 @@ class AssetApplicationController extends Controller
             );
         }
 
-        DB::transaction(function () use ($history, $assetModel, $asset, $quantity ) {
+        DB::transaction(function () use ($asset, $user, $quantity ) {
 
-            $history->registerHistory(
-                Auth::id(),
-                $asset->asset_id,
-                $quantity
+            ConsumableHistory::registerHistory(
+                $user,
+                $asset,
+                $quantity,
             );
 
-            $assetModel->decreaseStock(
-                $asset,
-                $quantity
+            $asset->decreaseStock(
+                $quantity,
             );
         });
 
@@ -119,20 +114,17 @@ class AssetApplicationController extends Controller
             'asset_id' => ['required', 'integer'],
         ]);
 
-        $assetId = $validated['asset_id'];
-        $userId = Auth::id();
-
-        $assetModel = new Asset();
-        $loanHistory = new LoanHistory();
-
-        $asset = $assetModel->findLoan($assetId);
+        $user=Auth::user();
+        $userId = $user->user_id;
+        $assetId=$validated['asset_id'];
+        $asset = Asset::findLoan($assetId);
 
         if (!$asset) {
             return back()->with('error', __('messages.asset.asset_not_found'));
         }
 
         // 7日以上超過している場合は貸出不可
-        if ($loanHistory->isLoanLocked($userId)) {
+        if (LoanHistory::isLoanLocked($userId)) {
             return back()->with(
                 'error',
                 '選択した資産は、すでに貸出中です。'
@@ -140,7 +132,7 @@ class AssetApplicationController extends Controller
         }
 
         // すでに貸出中
-        if ($loanHistory->isBorrowed($assetId)) {
+        if (LoanHistory::isBorrowed($asset)) {
             return back()->with(
                 'error',
                 __('messages.asset.already_borrowed')
@@ -149,8 +141,8 @@ class AssetApplicationController extends Controller
 
         $dueDate = now()->addDays($asset->max_loan_days);
 
-        $loanHistory->borrow(
-            $userId,
+        loanHistory::borrow(
+            $user,
             $assetId,
             $dueDate
         );
