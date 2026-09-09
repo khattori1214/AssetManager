@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\ConsumableHistory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
+use App\Http\Requests\AcquireAssetRequest;
+use App\Http\Requests\BorrowAssetRequest;
+use Exception;
 
 class AssetApplicationController extends Controller
 {
@@ -22,10 +24,10 @@ class AssetApplicationController extends Controller
         $assetType = $request->input('asset_type');
         $status = $request->input('status');
 
-        $loanAssetData = Asset::loanAssetData($keyword, $assetType,$status);
-        $consumableAssetData = Asset::consumableAssetData($keyword, $assetType,$status);
+        $loanAssetData = Asset::loanAssetData($keyword, $assetType, $status);
+        $consumableAssetData = Asset::consumableAssetData($keyword, $assetType, $status);
 
-        $user=Auth::user();
+        $user = Auth::user();
         $overdueCount = LoanHistory::countOverdue($user);
         $isLocked = LoanHistory::isLoanLocked($user);
 
@@ -43,19 +45,16 @@ class AssetApplicationController extends Controller
     }
 
 
-    public function acquire(Request $request)
+    public function acquire(AcquireAssetRequest $request)
     {
-        $validated = $request->validate([
-            'asset_id' => ['required', 'integer'],
-            'quantity' => ['required', 'integer', 'min:1'],
-        ]);
-        $assetId=$validated['asset_id'];
+        $validated = $request->validated();
+        $assetId = $validated['asset_id'];
         $asset = Asset::findConsumable($assetId);
-        $user=Auth::user();
+        $user = Auth::user();
         $quantity = $validated['quantity'];
 
         if (!$asset) {
-            return back()->with('error', __('messages.asset.asset_not_found'));
+            throw new \Exception;
         }
 
         // 最大申請数チェック
@@ -87,7 +86,7 @@ class AssetApplicationController extends Controller
             );
         }
 
-        DB::transaction(function () use ($asset, $user, $quantity ) {
+        DB::transaction(function () use ($asset, $user, $quantity) {
 
             ConsumableHistory::registerHistory(
                 $user,
@@ -108,23 +107,23 @@ class AssetApplicationController extends Controller
     /**
      * 貸出資産の貸出処理
      */
-    public function borrow(Request $request)
+    public function borrow(BorrowAssetRequest $request)
     {
-        $validated = $request->validate([
-            'asset_id' => ['required', 'integer'],
-        ]);
-
-        $user=Auth::user();
+        $validated = $request->validated();
+        $user = Auth::user();
         $userId = $user->user_id;
-        $assetId=$validated['asset_id'];
+        $assetId = $validated['asset_id'];
         $asset = Asset::findLoan($assetId);
 
         if (!$asset) {
-            return back()->with('error', __('messages.asset.asset_not_found'));
+            throw new \Exception;
         }
+        // if (!$asset) {
+        //     return back()->with('error', __('messages.asset.asset_not_found'));
+        // }
 
         // 7日以上超過している場合は貸出不可
-        if (LoanHistory::isLoanLocked($userId)) {
+        if (LoanHistory::isLoanLocked($user)) {
             return back()->with(
                 'error',
                 '選択した資産は、すでに貸出中です。'
@@ -143,7 +142,7 @@ class AssetApplicationController extends Controller
 
         loanHistory::borrow(
             $user,
-            $assetId,
+            $asset,
             $dueDate
         );
 
