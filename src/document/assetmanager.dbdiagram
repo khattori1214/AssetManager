@@ -1,0 +1,149 @@
+{
+  "version": "3.0.0",
+  "darkMode": true,
+  "gridEnabling": false,
+  "currentViewName": null,
+  "defaultView": {
+    "detailLevel": "All",
+    "relationshipMode": "All",
+    "tablePositions": [
+      {
+        "name": "users",
+        "schemaName": "public",
+        "x": 69.5208086981848,
+        "y": -635.2910350585164
+      },
+      {
+        "name": "consumable_histories",
+        "schemaName": "public",
+        "x": 90.4045678303134,
+        "y": -152.68107990262263
+      },
+      {
+        "name": "loan_categories",
+        "schemaName": "public",
+        "x": 1339.3090621753831,
+        "y": 384.5754399467867
+      },
+      {
+        "name": "csv_files",
+        "schemaName": "public",
+        "x": 173.54754236662365,
+        "y": 225.7500619502539
+      },
+      {
+        "name": "roles",
+        "schemaName": "public",
+        "x": 1252.8881999670994,
+        "y": -474.5110400414139
+      },
+      {
+        "name": "assets",
+        "schemaName": "public",
+        "x": 1267.3530490775167,
+        "y": -88.03259289994492
+      },
+      {
+        "name": "loan_histories",
+        "schemaName": "public",
+        "x": 750.4251477224492,
+        "y": 174.26575208686268
+      }
+    ],
+    "tableGroupCollapseStates": [],
+    "stickyNoteLayouts": [],
+    "referencePaths": [
+      {
+        "firstFieldNames": [
+          "role_id"
+        ],
+        "firstTableName": "users",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "role_id"
+        ],
+        "secondTableName": "roles",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "category_id"
+        ],
+        "firstTableName": "assets",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "category_id"
+        ],
+        "secondTableName": "loan_categories",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "user_id"
+        ],
+        "firstTableName": "loan_histories",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "user_id"
+        ],
+        "secondTableName": "users",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "asset_id"
+        ],
+        "firstTableName": "loan_histories",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "asset_id"
+        ],
+        "secondTableName": "assets",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "user_id"
+        ],
+        "firstTableName": "consumable_histories",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "user_id"
+        ],
+        "secondTableName": "users",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      },
+      {
+        "firstFieldNames": [
+          "asset_id"
+        ],
+        "firstTableName": "consumable_histories",
+        "firstSchemaName": "public",
+        "firstRelation": "*",
+        "secondFieldNames": [
+          "asset_id"
+        ],
+        "secondTableName": "assets",
+        "secondSchemaName": "public",
+        "secondRelation": "1",
+        "checkPoints": []
+      }
+    ]
+  },
+  "views": {}
+}

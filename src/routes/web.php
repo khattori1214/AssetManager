@@ -6,6 +6,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\TopController;
 use App\Http\Controllers\UsageHistoryController;
 use App\Http\Controllers\AssetManagementController;
+use App\Http\Controllers\UserManagementController;
+
 
 
 Route::get('/', function () {
@@ -60,8 +62,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/csv/download', [AssetManagementController::class, 'download']);
 
     // 新規ユーザー登録画面の表示
-    Route::get('/admin/user/create',[AssetManagementController::class,'userIndex']);
+    Route::get('/admin/user/create', [UserManagementController::class, 'create']);
 
-    Route::post('/admin/user/create',[AssetManagementController::class,'createUser']);
+    Route::post('/admin/user/create', [UserManagementController::class, 'createUser']);
+
+    // 全ユーザーの一覧表示
+    Route::get('/admin/user/index', [UserManagementController::class, 'index']);
+
+    // ユーザーを更新する画面の表示
+    Route::get('/admin/user/edit/{user}', [UserManagementController::class, 'edit']);
+
+    Route::put('/admin/user/edit/{user}', [UserManagementController::class, 'editUser']);
 });
 

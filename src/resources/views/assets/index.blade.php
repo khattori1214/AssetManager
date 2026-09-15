@@ -73,39 +73,29 @@
 
                         <optgroup label="貸出資産">
 
-                        <option value="loan_available" @selected(request('status') === 'loan_available')>
-                            貸出可能
-                        </option>
+                            <option value="loan_available" @selected(request('status') === 'loan_available')>
+                                貸出可能
+                            </option>
 
-                        <option value="loan_unavailable" @selected(request('status') === 'loan_unavailable')>
-                            貸出中
-                        </option>
+                            <option value="loan_unavailable" @selected(request('status') === 'loan_unavailable')>
+                                貸出中
+                            </option>
 
                         <optgroup label="消耗品">
 
-                        <option value="consumable_available" @selected(request('status') === 'consumable_available')>
-                            取得可能
-                        </option>
-
-                        <option value="consumable_need_to_order" @selected(request('status') === 'consumable_unavailable')>
-                            要発注
-                        </option>
-
-                        <option value="consumable_unavailable" @selected(request('status') === 'consumable_unavailable')>
-                            取得不可
-                        </option>
-
-                        <!-- <option value="loan" @selected(request('stock') >0)>
+                            <option value="consumable_available" @selected(request('status') === 'consumable_available')>
                                 取得可能
                             </option>
 
-                            <option value="consumable" @selected(request('stock') >= 'min_stock')>
+                            <option value="consumable_need_to_order"
+                                @selected(request('status') === 'consumable_unavailable')>
                                 要発注
-                            </option> -->
+                            </option>
 
-                        <!-- <option value="consumable" @selected(request('asset_type') === 'consumable')>
-                                在庫無し
-                            </option> -->
+                            <option value="consumable_unavailable" @selected(request('status') === 'consumable_unavailable')>
+                                取得不可
+                            </option>
+
                     </select>
                 </div>
 

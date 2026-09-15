@@ -25,10 +25,9 @@ class LoginRequest extends FormRequest
         return [
             'employee_no' => [
                 'required',
-                'string',
-                'max:32',
-                'regex:/\A[A-Za-z0-9]+\z/',
+                'regex:/^[0-9]{1,32}$/',
             ],
+
             'password' => [
                 'required',
                 'string',

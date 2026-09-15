@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 
 
+
 class LoanHistory extends Model
 {
     protected $table = 'loan_histories';
@@ -101,10 +102,7 @@ class LoanHistory extends Model
      */
     public function returnAsset(User $user): int
     {
-        return LoanHistory::where('loan_history_id', $user->loan_history_id)
-            ->where('user_id', $user->user_id)
-            ->whereNull('return_date')
-            ->update([
+        return $this->update([
                 'return_date' => now(),
             ]);
 

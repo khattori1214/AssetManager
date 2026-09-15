@@ -62,13 +62,11 @@
                     </li>
 
                     <li>
-                        <a href="/admin/user/create">
-                            ユーザー登録画面<br>【管理者のみ】
+                        <a href="/admin/user/index">
+                            ユーザー一覧・登録・編集画面<br>【管理者のみ】
                         </a>
                     </li>
-
                 @endif
-
             </ul>
 
         </aside>
@@ -98,14 +96,9 @@
                     @endforeach
                 </div>
             @endif
-
-
             @yield('content')
-
         </main>
-
     </div>
-
 </body>
 
 </html>

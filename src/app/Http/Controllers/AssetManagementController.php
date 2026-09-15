@@ -62,19 +62,6 @@ class AssetManagementController extends Controller
 
     /**
      * 管理者用画面
-     * 指定した資産を削除する
-     */
-    // public function destroy($id)
-    // {
-    //     $assetModel = new Asset();
-    //     $assetModel->deleteAsset($id);
-
-    //     return redirect('/admin')
-    //         ->with('success', '削除が完了しました。');
-    // }
-
-    /**
-     * 管理者用画面
      * 消耗品の在庫数を更新する
      */
     public function updateStock(Request $request, Asset $asset)
@@ -90,36 +77,6 @@ class AssetManagementController extends Controller
         return redirect('/admin')
             ->with('success', '在庫情報を更新しました。');
     }
-
-    /**
-     * 管理者用画面
-     * 一覧表示
-     */
-
-    public function userIndex(){
-        return view('admin.user-create');
-    }
-
-    // **
-    //  * 管理者用画面
-    //  * 新しいユーザーを登録する
-    //  */
-    public function createUser(Request $request)
-    {
-        $createUser = $request->validate([
-            'employee_no' => ['integer'],
-            'user_name' => ['required', 'string', 'max:32'],
-            'email' => ['max:225'],
-            'password' => ['max:255'],
-            'role_id' => ['integer'],
-        ]);
-       
-        User::createUser($createUser);
-
-        return redirect('/admin/user/create')
-            ->with('success', '登録が完了しました。');
-    }
-
 
     // 経理連携用CSVファイルをダウンロードする
     public function download()
