@@ -39,9 +39,9 @@ class Asset extends Model
      * 管理者用の資産登録・在庫管理画面
      * 資産情報を登録する
      */
-    public static function registerAsset(array $registerAsset): Asset
+    public static function registerAsset(array $validated): Asset
     {
-        return Asset::create($registerAsset);
+        return Asset::create($validated);
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\LoanHistory;
 use Illuminate\Http\Request;
 use App\Models\CsvFile;
+use App\Http\Requests\StoreAssetRequest;
 
 
 class AssetManagementController extends Controller
@@ -42,20 +43,10 @@ class AssetManagementController extends Controller
      * 管理者用画面
      * 新しい資産を登録する
      */
-    public function store(Request $request)
+    public function store(StoreAssetRequest $request)
     {
-        $registerAsset = $request->validate([
-            'asset_name' => ['required', 'string', 'max:255'],
-            'category_id' => ['integer'],
-            'asset_type' => ['required', 'in:loan,consumable'],
-            'stock' => ['nullable', 'integer', 'min:0'],
-            'min_stock' => ['nullable', 'integer', 'min:0'],
-            'unit' => ['required', 'string', 'max:50'],
-            'max_request_quantity' => ['nullable', 'integer', 'min:1'],
-            'monthly_request_limit' => ['nullable', 'integer', 'min:1'],
-        ]);
-        Asset::registerAsset($registerAsset);
-
+        $validated=$request->validated();
+        Asset::registerAsset($validated);
         return redirect('/admin')
             ->with('success', '登録が完了しました。');
     }
