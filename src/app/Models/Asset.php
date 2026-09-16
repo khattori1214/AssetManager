@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Asset extends Model
 {
+    use SoftDeletes;
     protected $table = 'assets';
 
     protected $primaryKey = 'asset_id';

@@ -7,7 +7,7 @@
     <a href="/admin" class="{{ request()->is('admin*') ? 'active' : '' }}">
         <h1>資産登録・在庫管理画面</h1>
     </a>
-    
+
     <button type="button" onclick="document.getElementById('loanRegisterModal').showModal()">
         貸出資産を登録する
     </button>
@@ -44,8 +44,14 @@
                 <td>{{ $asset->max_loan_days }}日</td>
                 <td>
 
+                    <button type="button"
+                        onclick="document.getElementById('stockModal-{{ $asset->asset_id }}').showModal()">
+                        更新する
+                    </button>
+
                     <button type="button" class="cancel-button"
-                        onclick="openDeleteModal('{{ $asset->asset_id }}', '{{ $asset->asset_name }}')">
+                        onclick="openDeleteModal('{{ $asset->asset_id }}', '{{ $asset->asset_name }}')"
+                        @disabled($asset->is_borrowed)>
                         削除する
                     </button>
                 </td>
@@ -91,7 +97,8 @@
                     </button>
 
                     <button type="button" class="cancel-button"
-                        onclick="openDeleteModal('{{ $asset->asset_id }}', '{{ $asset->asset_name }}')">
+                        onclick="openDeleteModal('{{ $asset->asset_id }}', '{{ $asset->asset_name }}')"
+                        @disabled($asset->is_borrowed)>
                         削除する
                     </button>
                 </td>
@@ -135,196 +142,229 @@
                 @endif
             </td>
             @endforeach
-            </tr>
-            </table>
+        </tr>
+    </table>
 
+    <!-- 貸出資産更新ダイアログ -->
+    @foreach ($loanAssetData as $asset)
+        <dialog id="stockModal-{{ $asset->asset_id }}">
+            <h2>貸出資産の情報を更新する</h2>
 
+            <form action="/admin/assets/{{ $asset->asset_id }}" method="post">
+                @csrf
+                @method('PATCH')
 
-            <!-- 消耗品在庫更新ダイアログ -->
-            @foreach ($consumableAssetData as $asset)
-                <dialog id="stockModal-{{ $asset->asset_id }}">
-                    <h2>消耗品の在庫を更新する</h2>
+                <div>
+                    <label>資産名</label>
+                    <input type="text" name="asset_name" value="{{ old('asset_name', $asset->asset_name) }}" required>
+                </div>
 
-                    <form action="/admin/assets/{{ $asset->asset_id }}/stock" method="post">
-                        @csrf
-                        @method('PATCH')
+                <div>
+                    <label>カテゴリ</label>
+                    <select id="category_id" name="category_id">
+                        <option value="1" @selected(old('category_id', $asset->category_id) === '1')>
+                            PC
+                        </option>
+                        <option value="2" @selected(old('category_id', $asset->category_id) === '2')>
+                            書籍
+                        </option>
+                    </select>
+                </div>
 
-                        <p>
-                            資産名：{{ $asset->asset_name }}（変更不可）
-                        </p>
+                <button type="submit">更新する</button>
 
-                        <div>
-                            <label>在庫数</label>
-                            <input type="number" name="stock" value="{{ old('stock', $asset->stock) }}" min="0" required>
-                        </div>
+                <button type="button" class="cancel-button"
+                    onclick="document.getElementById('stockModal-{{ $asset->asset_id }}').close()">
+                    キャンセル
+                </button>
 
-                        <div>
-                            <label>最低キープ数</label>
-                            <input type="number" name="min_stock" value="{{ old('min_stock', $asset->min_stock) }}" min="0"
-                                required>
-                        </div>
+            </form>
+        </dialog>
+    @endforeach
 
-                        <p>単位：{{ $asset->unit }}（変更不可）</p>
+    <!-- 消耗品在庫更新ダイアログ -->
+    @foreach ($consumableAssetData as $asset)
+        <dialog id="stockModal-{{ $asset->asset_id }}">
+            <h2>消耗品の在庫を更新する</h2>
 
-                        <p>
-                            1回の最大申請数：
-                            {{ $asset->max_request_quantity }}（変更不可）
-                        </p>
-
-                        <p>
-                            月間最大申請回数：
-                            {{ $asset->monthly_request_limit }}（変更不可）
-                        </p>
-
-
-                        <button type="submit">更新する</button>
-
-                        <button type="button" class="cancel-button"
-                            onclick="document.getElementById('stockModal-{{ $asset->asset_id }}').close()">
-                            キャンセル
-                        </button>
-
-                    </form>
-                </dialog>
-            @endforeach
-
-
-
-            <dialog id="loanRegisterModal">
-                <h2>貸出資産を登録する</h2>
-
-                <form action="/admin/assets" method="post">
-                    @csrf
-
-                    <input type="hidden" name="asset_type" value="loan">
-
-                    <div>
-                        <label>資産名</label>
-                        <input type="text" name="asset_name" required>
-                    </div>
-
-                    <div>
-                        <label>カテゴリ名</label>
-                        <!-- プルダウンに -->
-                        <select name="category_id">
-                            <option value="1">PC</option>
-                            <option value="2">BOOK</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>単位</label>
-                        <select name="unit">
-                            <option value="台">台</option>
-                            <option value="冊">冊</option>
-                            <option value="本">本</option>
-                            <option value="個">個</option>
-                            <option value="枚">枚</option>
-                            <option value="箱">箱</option>
-                        </select>
-                    </div>
-
-                    <button type="submit">登録する</button>
-
-                    <button type="button" class="cancel-button"
-                        onclick="document.getElementById('loanRegisterModal').close()">
-                        キャンセル
-                    </button>
-                </form>
-            </dialog>
-
-            <dialog id="consumableRegisterModal">
-                <h2>消耗品を登録する</h2>
-
-                <form action="/admin/assets" method="post">
-                    @csrf
-
-                    <input type="hidden" name="asset_type" value="consumable">
-
-                    <div>
-                        <label>資産名</label>
-                        <input type="text" name="asset_name" required>
-                    </div>
-
-                    <div>
-                        <label>在庫数</label>
-                        <input type="number" name="stock" min="0" required>
-                    </div>
-
-                    <div>
-                        <label>最低キープ数</label>
-                        <input type="number" name="min_stock" min="0" required>
-                    </div>
-
-                    <div>
-                        <label>単位</label>
-                        <select name="unit">
-                            <option value="台">台</option>
-                            <option value="冊">冊</option>
-                            <option value="本">本</option>
-                            <option value="個">個</option>
-                            <option value="枚">枚</option>
-                            <option value="箱">箱</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>1回の最大申請数</label>
-                        <input type="number" name="max_request_quantity" min="1">
-                    </div>
-
-                    <div>
-                        <label>月間最大申請回数</label>
-                        <input type="number" name="monthly_request_limit" min="1">
-                    </div>
-
-                    <button type="submit">登録する</button>
-
-                    <button type="button" class="cancel-button"
-                        onclick="document.getElementById('consumableRegisterModal').close()">
-                        キャンセル
-                    </button>
-                </form>
-            </dialog>
-
-
-            <h2>経理連携用CSVファイル</h2>
-            <a href="/admin/csv/download">
-                経理連携用CSVをダウンロード
-            </a>
-
-
-            <dialog id="deleteModal">
-                <h2>貸出資産・消耗品削除</h2>
+            <form action="/admin/assets/{{ $asset->asset_id }}/stock" method="post">
+                @csrf
+                @method('PATCH')
 
                 <p>
-                    「<span id="deleteAssetName"></span>」を削除しますか？
+                    資産名：{{ $asset->asset_name }}（変更不可）
                 </p>
 
-                <form id="deleteForm" method="post">
-                    @csrf
-                    @method('DELETE')
+                <div>
+                    <label>在庫数</label>
+                    <input type="number" name="stock" value="{{ old('stock', $asset->stock) }}" min="0" required>
+                </div>
 
-                    <button type="submit">
-                        削除する
-                    </button>
+                <div>
+                    <label>最低キープ数</label>
+                    <input type="number" name="min_stock" value="{{ old('min_stock', $asset->min_stock) }}" min="0"
+                        required>
+                </div>
 
-                    <button type="button" class="cancel-button"
-                        onclick="document.getElementById('deleteModal').close()">
-                        キャンセル
-                    </button>
+                <p>単位：{{ $asset->unit }}（変更不可）</p>
 
-                </form>
-            </dialog>
+                <p>
+                    1回の最大申請数：
+                    {{ $asset->max_request_quantity }}（変更不可）
+                </p>
+
+                <p>
+                    月間最大申請回数：
+                    {{ $asset->monthly_request_limit }}（変更不可）
+                </p>
 
 
-            <script>
-                function openDeleteModal(id, name) {
-                    document.getElementById('deleteAssetName').textContent = name;
-                    document.getElementById('deleteForm').action = '/admin/assets/' + id;
-                    document.getElementById('deleteModal').showModal();
-                }
-            </script>
+                <button type="submit">更新する</button>
+
+                <button type="button" class="cancel-button"
+                    onclick="document.getElementById('stockModal-{{ $asset->asset_id }}').close()">
+                    キャンセル
+                </button>
+
+            </form>
+        </dialog>
+    @endforeach
+
+
+
+    <dialog id="loanRegisterModal">
+        <h2>貸出資産を登録する</h2>
+
+        <form action="/admin/assets" method="post">
+            @csrf
+
+            <input type="hidden" name="asset_type" value="loan">
+
+            <div>
+                <label>資産名</label>
+                <input type="text" name="asset_name" required>
+            </div>
+
+            <div>
+                <label>カテゴリ名</label>
+                <!-- プルダウンに -->
+                <select name="category_id">
+                    <option value="1">PC</option>
+                    <option value="2">BOOK</option>
+                </select>
+            </div>
+
+            <div>
+                <label>単位</label>
+                <select name="unit">
+                    <option value="台">台</option>
+                    <option value="冊">冊</option>
+                    <option value="本">本</option>
+                    <option value="個">個</option>
+                    <option value="枚">枚</option>
+                    <option value="箱">箱</option>
+                </select>
+            </div>
+
+            <button type="submit">登録する</button>
+
+            <button type="button" class="cancel-button" onclick="document.getElementById('loanRegisterModal').close()">
+                キャンセル
+            </button>
+        </form>
+    </dialog>
+
+    <dialog id="consumableRegisterModal">
+        <h2>消耗品を登録する</h2>
+
+        <form action="/admin/assets" method="post">
+            @csrf
+
+            <input type="hidden" name="asset_type" value="consumable">
+
+            <div>
+                <label>資産名</label>
+                <input type="text" name="asset_name" required>
+            </div>
+
+            <div>
+                <label>在庫数</label>
+                <input type="number" name="stock" min="0" required>
+            </div>
+
+            <div>
+                <label>最低キープ数</label>
+                <input type="number" name="min_stock" min="0" required>
+            </div>
+
+            <div>
+                <label>単位</label>
+                <select name="unit">
+                    <option value="台">台</option>
+                    <option value="冊">冊</option>
+                    <option value="本">本</option>
+                    <option value="個">個</option>
+                    <option value="枚">枚</option>
+                    <option value="箱">箱</option>
+                </select>
+            </div>
+
+            <div>
+                <label>1回の最大申請数</label>
+                <input type="number" name="max_request_quantity" min="1">
+            </div>
+
+            <div>
+                <label>月間最大申請回数</label>
+                <input type="number" name="monthly_request_limit" min="1">
+            </div>
+
+            <button type="submit">登録する</button>
+
+            <button type="button" class="cancel-button"
+                onclick="document.getElementById('consumableRegisterModal').close()">
+                キャンセル
+            </button>
+        </form>
+    </dialog>
+
+
+    <h2>経理連携用CSVファイル</h2>
+    <a href="/admin/csv/download">
+        経理連携用CSVをダウンロード
+    </a>
+
+
+    <dialog id="deleteModal">
+        <h2>貸出資産・消耗品削除</h2>
+
+        <p>
+            「<span id="deleteAssetName"></span>」を削除しますか？
+        </p>
+
+        <form id="deleteForm" method="post">
+            @csrf
+            @method('DELETE')
+
+            <button type="submit">
+                削除する
+            </button>
+
+            <button type="button" class="cancel-button" onclick="document.getElementById('deleteModal').close()">
+                キャンセル
+            </button>
+
+        </form>
+    </dialog>
+
+
+    <script>
+        function openDeleteModal(id, name) {
+            document.getElementById('deleteAssetName').textContent = name;
+            document.getElementById('deleteForm').action = '/admin/assets/' + id;
+            document.getElementById('deleteModal').showModal();
+        }
+    </script>
 
 
 </div>

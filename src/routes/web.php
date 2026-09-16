@@ -57,6 +57,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::patch('/admin/assets/{id}/stock', [AssetManagementController::class, 'updateStock']);
     Route::delete('/admin/assets/{id}', [AssetManagementController::class, 'destroy']);
 
+    // 管理者用 貸出編集・更新機能
+    Route::patch('/admin/assets/{id}', [AssetManagementController::class, 'update']);
 
     // 経理連携用CSV出力バッチ処理
     Route::get('/admin/csv/download', [AssetManagementController::class, 'download']);
