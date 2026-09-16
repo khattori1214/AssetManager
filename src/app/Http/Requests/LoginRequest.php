@@ -50,4 +50,12 @@ class LoginRequest extends FormRequest
         ];
     }
 
+    public function attributes(): array
+    {
+        return [
+            'employee_no' => '社員番号ID',
+            'password' => 'パスワード',
+        ];
+    }
+
 }

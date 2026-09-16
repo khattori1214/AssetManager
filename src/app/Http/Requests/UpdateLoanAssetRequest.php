@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUserRequest extends FormRequest
+class UpdateLoanAssetRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,20 +23,18 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_name' => ['required', 'string', 'max:32'],
-            'email' => ['required', 'email', 'max:225', 'unique:users,email'],
-            'password' => ['required', 'string', 'min:8', 'max:128', 'regex:/\A(?=.*[A-Za-z])(?=.*[0-9])(?=.*[^A-Za-z0-9])[!-~]+\z/'],
-            'role_id' => ['required', 'integer', 'exists:roles,role_id'],
+            'asset_name' => ['required', 'string', 'max:255'],
+            'category_id' => ['integer'],
         ];
     }
 
     public function attributes(): array
     {
         return [
-            'user_name' => 'ユーザー名',
-            'email' => 'メールアドレス',
-            'password' => 'パスワード',
-            'role_id' => '権限ID',
+            'asset_name' => '資産名',
+            'category_id' => 'カテゴリID',
         ];
     }
+
+    
 }

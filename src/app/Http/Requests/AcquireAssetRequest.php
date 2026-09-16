@@ -37,4 +37,12 @@ class AcquireAssetRequest extends FormRequest
             ],
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'asset_id' => '資産ID',
+            'quantity' => '数量',
+        ];
+    }
 }
