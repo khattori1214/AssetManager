@@ -33,4 +33,18 @@ class StoreAssetRequest extends FormRequest
             'monthly_request_limit' => ['nullable', 'integer', 'min:1'],
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'asset_name' => '資産名',
+            'category_id' => 'カテゴリID',
+            'asset_type' => '資産種別',
+            'stock' => '在庫数',
+            'min_stock' => '最低キープ数',
+            'unit' => '単位',
+            'max_request_quantity' => '最大申請数',
+            'monthly_request_limit' => '申請頻度',
+        ];
+    }
 }

@@ -29,4 +29,14 @@ class UpdateUserRequest extends FormRequest
             'role_id' => ['required', 'integer', 'exists:roles,role_id'],
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'user_name' => 'ユーザー名',
+            'email' => 'メールアドレス',
+            'password' => 'パスワード',
+            'role_id' => '権限ID',
+        ];
+    }
 }

@@ -27,4 +27,14 @@ class UpdateLoanAssetRequest extends FormRequest
             'category_id' => ['integer'],
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'asset_name' => '資産名',
+            'category_id' => 'カテゴリID',
+        ];
+    }
+
+    
 }
