@@ -10,7 +10,7 @@ Artisan::command('inspire', function () {
 
 // 警告メール送信バッチ：毎日午前7時
 Schedule::command('app:send-warning-email')
-    ->dailyAt('07:00');
+    ->dailyAt('14:28');
 
 // 経理連携CSV出力バッチ：毎月1日の午前1時
 Schedule::command('app:generate-accounting-csv')
