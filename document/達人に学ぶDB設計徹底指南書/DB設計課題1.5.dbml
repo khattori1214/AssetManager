@@ -80,7 +80,6 @@ Table services {
     Note: 'サービス情報'
 }
 
-// 中間テーブル
 Table contract_sales_reps {
     contract_sales_reps_id integer [pk, increment, note: '契約・営業担当者ID']
     contract_id integer [not null, note: '契約ID']
