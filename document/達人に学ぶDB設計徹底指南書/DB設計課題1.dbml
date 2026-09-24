@@ -61,7 +61,7 @@ Table qualifications {
 
 Table employee_qualifications {
     employee_qualification_id integer [pk, increment, unique note: '社員資格ID']
-    employee_id integer [not null, unique, note: '社員ID']
+    employee_id integer [not null, note: '社員ID']
     qualification_id integer [not null, note: '資格ID']
     acquired_date date [not null, note: '取得日']
     expiration_date date [note: '有効期限']
@@ -77,8 +77,8 @@ Table employee_qualifications {
 
 Ref: employees.department_id > departments.department_id
 
-Ref: employee_trainings.employee_id > employees.employee_id
-Ref: employee_trainings.training_id > trainings.training_id
+Ref: employee_trainings.employee_id ?> employees.employee_id
+Ref: employee_trainings.training_id ?> trainings.training_id
 
-Ref: employee_qualifications.employee_id > employees.employee_id
-Ref: employee_qualifications.qualification_id > qualifications.qualification_id
+Ref: employee_qualifications.employee_id ?> employees.employee_id
+Ref: employee_qualifications.qualification_id ?> qualifications.qualification_id
