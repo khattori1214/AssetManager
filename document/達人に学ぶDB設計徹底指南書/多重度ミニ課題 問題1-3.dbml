@@ -1,0 +1,68 @@
+//問題1
+Table departments {
+  id int [pk]
+  name varchar(100) [not null]
+}
+
+Table employees {
+  id int [pk]
+  employee_id int
+  department_id int [not null]
+  name varchar(100) [not null]
+}
+
+Table trainings {
+  id int [pk]
+  training_id int
+  title varchar(100) [not null]
+}
+
+// ここに必要な Ref: を書く
+Ref: employees.department_id ?> departments.id
+
+//問題2
+Table users {
+  id int [pk]
+  email varchar(255) [not null]
+}
+
+Table profiles {
+  id int [pk]
+  user_id int [not null, unique]
+  display_name varchar(100) [not null]
+}
+
+Table announcements {
+  id int [pk]
+  title varchar(100) [not null]
+}
+
+// ここに必要な Ref: を書く
+Ref: users.id - profiles.id
+
+//問題3
+Table orders {
+  id int [pk]
+  ordered_at datetime [not null]
+}
+
+Table products {
+  id int [pk]
+  name varchar(100) [not null]
+}
+
+Table order_items {
+  id int [pk]
+  order_id int [not null]
+  product_id int [not null]
+  quantity int [not null]
+
+  indexes {
+    (order_id, product_id) [unique]
+  }
+}
+
+// ここに必要な Ref: を書く
+Ref: order_items.order_id > orders.id
+Ref: order_items.product_id ?> products.id
+
