@@ -1,0 +1,76 @@
+Table departments {
+    department_id integer [pk, increment, note: '部署ID']
+    department_code varchar(20) [not null, unique, note: '部署コード']
+    department_name varchar(100) [not null, note: '部署名']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '部署情報'
+}
+
+Table employees {
+    employee_id integer [pk, increment, note: '社員ID']
+    employee_code varchar(20) [not null, unique, note: '社員番号']
+    employee_name varchar(100) [not null, note: '社員名']
+    email varchar(255) [not null, unique, note: 'メールアドレス']
+    department_id integer [not null, note: '所属部署ID']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '社員情報'
+}
+
+Table trainings {
+    training_id integer [pk, increment, note: '研修ID']
+    training_code varchar(20) [not null, unique, note: '研修コード']
+    training_name varchar(100) [not null, note: '研修名']
+    training_category varchar(100) [not null, note: '研修カテゴリ']
+    training_date date [not null, note: '開催日']
+    instructor_name varchar(100) [not null, note: '講師名']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '研修情報'
+}
+
+Table employee_trainings {
+    employee_trainings_id integer [pk, increment, note: '研修受講ID']
+    employee_id integer [not null, unique note: '社員ID']
+    training_id integer [not null, unique note: '研修ID']
+    attendance_status varchar(20) [not null, note: '受講状況：申込済・受講済・欠席']
+    attendance_result varchar(20) [note: '受講結果：合格・不合格']
+    score integer [note: '受講点数']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '研修受講情報'
+}
+
+Table qualifications {
+    qualification_id integer [pk, increment, note: '資格ID']
+    qualification_name varchar(255) [not null, unique, note: '資格名']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '資格情報'
+}
+
+Table employee_qualifications {
+    employee_qualification_id integer [pk, increment, unique note: '社員資格ID']
+    employee_id integer [not null, unique, note: '社員ID']
+    qualification_id integer [not null, note: '資格ID']
+    acquired_date date [not null, note: '取得日']
+    expiration_date date [note: '有効期限']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '社員資格情報'
+}
+
+Ref: employees.department_id > departments.department_id
+
+Ref: employee_trainings.employee_id > employees.employee_id
+Ref: employee_trainings.training_id > trainings.training_id
+
+Ref: employee_qualifications.employee_id > employees.employee_id
+Ref: employee_qualifications.qualification_id > qualifications.qualification_id
