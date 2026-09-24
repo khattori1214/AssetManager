@@ -1,0 +1,121 @@
+Table clients {
+    client_id integer [pk, increment, note: '顧客ID']
+    client_code varchar(20) [not null, unique, note: '顧客コード']
+    client_name varchar(100) [not null, note: '顧客名']
+    postcode varchar(20) [not null, note: '郵便番号']
+    address varchar(100) [not null, note: '住所']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '顧客情報'
+}
+
+table client_phonenumbers {
+    id integer [pk, increment, note:'顧客電話番号ID']
+    client_id integer [not null, note: '顧客ID']
+    phonenumber varchar(20) [not null, note: '電話番号']
+}
+
+table client_emails {
+    id integer [pk, increment, note:'顧客メールアドレスID']
+    client_id integer [not null, note: '顧客ID']
+    email varchar(255) [not null, note: 'メールアドレス']
+}
+
+Table contracts {
+    contract_id integer [pk, increment, note: '契約ID']
+    client_id integer [not null, note: '顧客ID']
+    contract_number varchar(20) [not null, unique, note: '契約番号']
+    service_id integer [note: 'サービスID']
+    start_date date [not null, note: '開始日時']
+    end_date date [note: '終了日時']
+    contract_status varchar(20) [not null, note: '契約状況:商談中・契約中・解約済']
+
+    Note: '契約情報'
+}
+
+
+Table inquiry {
+    inquiry_id integer [pk, increment, note: '問い合わせID']
+    client_id integer [not null, note: '顧客ID']
+    inquiry_number varchar(20) [not null, unique, note: '問い合わせ番号']
+    inquiry_date datetime [not null, note: '問い合わせ日時']
+    inquiry_type varchar(20) [not null, note: '問い合わせ種別:操作方法・障害・契約変更・請求・解約・料金・担当変更']
+    inquiry_content varchar(100) [not null, note: '問い合わせ内容']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '問い合わせ情報'
+}
+
+Table inquiry_responses {
+    inquiry_responses_id integer [pk, increment, note: '問い合わせ対応ID']
+    inquiry_id integer [not null, note: '問い合わせID']
+    inquiry_responses_date datetime [not null, note: '対応日時']
+    inquiry_responses_content varchar(100) [not null, note: '対応内容']
+    employee_id integer [not null, note: '社員ID']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '問い合わせ対応情報'
+}
+
+Table employees {
+    employee_id integer [pk, increment,note: '社員ID']
+    department_id varchar(100) [not null, note:'部署ID']
+    employee_number varchar(20) [not null, unique, note: '社員番号']
+    employee_name varchar(20) [not null, note: '社員名']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '社員情報'
+}
+
+Table services {
+    service_id integer [pk, increment, note: 'サービスID']
+    service_name varchar(20) [not null, note: 'サービス名']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: 'サービス情報'
+}
+
+// 中間テーブル
+Table contract_sales_reps {
+    contract_sales_reps_id integer [pk, increment, note: '契約・営業担当者ID']
+    contract_id integer [not null, note: '契約ID']
+    employee_id integer [not null, note: '社員ID']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Indexes {
+        (contract_id, employee_id) [unique]
+    }
+
+    Note: '契約・営業担当者情報'
+}
+
+
+Table departments {
+    id varchar(100) [pk, note:'部署ID']
+    department_name varchar(20) [not null, note: '所属部署']
+}
+
+
+Ref: contracts.client_id ?> clients.client_id
+
+Ref: contract_sales_reps.employee_id ?> employees.employee_id
+Ref: contract_sales_reps.contract_id ?> contracts.contract_id
+
+Ref: inquiry.client_id ?> clients.client_id
+
+Ref: inquiry_responses.inquiry_id ?> inquiry.inquiry_id
+Ref: inquiry_responses.employee_id ?> employees.employee_id
+
+Ref: employees.department_id ?> departments.id
+
+Ref: contracts.service_id ?> services.service_id
+
+
+Ref: client_emails.client_id ?> clients.client_id
+Ref: client_phonenumbers.client_id ?> clients.client_id
