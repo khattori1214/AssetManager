@@ -43,6 +43,10 @@ Table employee_trainings {
     created_at timestamp [not null, note: '作成日時']
     updated_at timestamp [not null, note: '更新日時']
 
+    Indexes {
+        (employee_id, training_id) [unique]
+    }
+
     Note: '研修受講情報'
 }
 
@@ -63,6 +67,10 @@ Table employee_qualifications {
     expiration_date date [note: '有効期限']
     created_at timestamp [not null, note: '作成日時']
     updated_at timestamp [not null, note: '更新日時']
+
+     Indexes {
+        (employee_id, qualification_id) [unique]
+    }
 
     Note: '社員資格情報'
 }
