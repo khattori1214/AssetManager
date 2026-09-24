@@ -35,8 +35,8 @@ Table trainings {
 
 Table employee_trainings {
     employee_trainings_id integer [pk, increment, note: '研修受講ID']
-    employee_id integer [not null, unique note: '社員ID']
-    training_id integer [not null, unique note: '研修ID']
+    employee_id integer [not null, note: '社員ID']
+    training_id integer [not null, note: '研修ID']
     attendance_status varchar(20) [not null, note: '受講状況：申込済・受講済・欠席']
     attendance_result varchar(20) [note: '受講結果：合格・不合格']
     score integer [note: '受講点数']
