@@ -101,20 +101,19 @@ Table departments {
 }
 
 
-Ref: contracts.client_id ?> clients.client_id
+Ref: contracts.client_id > clients.client_id
 
-Ref: contract_sales_reps.employee_id ?> employees.employee_id
-Ref: contract_sales_reps.contract_id ?> contracts.contract_id
+Ref: contract_sales_reps.employee_id > employees.employee_id
+Ref: contract_sales_reps.contract_id > contracts.contract_id
 
-Ref: inquiry.client_id ?> clients.client_id
+Ref: inquiry.client_id > clients.client_id
 
-Ref: inquiry_responses.inquiry_id ?> inquiry.inquiry_id
-Ref: inquiry_responses.employee_id ?> employees.employee_id
+Ref: inquiry_responses.inquiry_id > inquiry.inquiry_id
+Ref: inquiry_responses.employee_id > employees.employee_id
 
-Ref: employees.department_id ?> departments.id
+Ref: employees.department_id > departments.id
 
-Ref: contracts.service_id ?> services.service_id
+Ref: contracts.service_id > services.service_id
 
-
-Ref: client_emails.client_id ?> clients.client_id
-Ref: client_phonenumbers.client_id ?> clients.client_id
+Ref: client_emails.client_id > clients.client_id
+Ref: client_phonenumbers.client_id > clients.client_id
