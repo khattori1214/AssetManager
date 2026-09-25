@@ -13,12 +13,14 @@ Table clients {
 table client_phonenumbers {
     client_phonenumber_id integer [pk, increment, note:'顧客電話番号ID']
     client_id integer [not null, note: '顧客ID']
+    is_primary boolean [not null, note: '代表フラグ']
     phonenumber varchar(20) [not null, note: '電話番号']
 }
 
 table client_emails {
     client_email_id integer [pk, increment, note:'顧客メールアドレスID']
     client_id integer [not null, note: '顧客ID']
+    is_primary boolean [not null, note: '代表フラグ']
     email varchar(255) [not null, note: 'メールアドレス']
 }
 
@@ -27,8 +29,8 @@ Table contracts {
     client_id integer [not null, note: '顧客ID']
     contract_number varchar(20) [not null, unique, note: '契約番号']
     service_id integer [not null, note: 'サービスID']
-    start_date date [not null, note: '開始日時']
-    end_date date [note: '終了日時']
+    start_date date [not null, note: '契約開始日時']
+    end_date date [note: '契約終了日時']
     contract_status varchar(20) [not null, note: '契約状況:商談中・契約中・解約済']
 
     Note: '契約情報'
@@ -97,7 +99,7 @@ Table contract_sales_reps {
 
 Table departments {
     department_id varchar(100) [pk, note:'部署ID']
-    department_name varchar(20) [not null, note: '所属部署']
+    department_name varchar(20) [not null, note: '部署名']
 }
 
 
