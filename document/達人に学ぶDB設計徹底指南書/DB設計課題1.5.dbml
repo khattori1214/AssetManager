@@ -11,13 +11,13 @@ Table clients {
 }
 
 table client_phonenumbers {
-    id integer [pk, increment, note:'顧客電話番号ID']
+    client_phonenumber_id integer [pk, increment, note:'顧客電話番号ID']
     client_id integer [not null, note: '顧客ID']
     phonenumber varchar(20) [not null, note: '電話番号']
 }
 
 table client_emails {
-    id integer [pk, increment, note:'顧客メールアドレスID']
+    client_email_id integer [pk, increment, note:'顧客メールアドレスID']
     client_id integer [not null, note: '顧客ID']
     email varchar(255) [not null, note: 'メールアドレス']
 }
@@ -26,7 +26,7 @@ Table contracts {
     contract_id integer [pk, increment, note: '契約ID']
     client_id integer [not null, note: '顧客ID']
     contract_number varchar(20) [not null, unique, note: '契約番号']
-    service_id integer [note: 'サービスID']
+    service_id integer [not null, note: 'サービスID']
     start_date date [not null, note: '開始日時']
     end_date date [note: '終了日時']
     contract_status varchar(20) [not null, note: '契約状況:商談中・契約中・解約済']
@@ -49,7 +49,7 @@ Table inquiry {
 }
 
 Table inquiry_responses {
-    inquiry_responses_id integer [pk, increment, note: '問い合わせ対応ID']
+    inquiry_response_id integer [pk, increment, note: '問い合わせ対応ID']
     inquiry_id integer [not null, note: '問い合わせID']
     inquiry_responses_date datetime [not null, note: '対応日時']
     inquiry_responses_content varchar(100) [not null, note: '対応内容']
@@ -81,7 +81,7 @@ Table services {
 }
 
 Table contract_sales_reps {
-    contract_sales_reps_id integer [pk, increment, note: '契約・営業担当者ID']
+    contract_sales_rep_id integer [pk, increment, note: '契約・営業担当者ID']
     contract_id integer [not null, note: '契約ID']
     employee_id integer [not null, note: '社員ID']
     created_at timestamp [not null, note: '作成日時']
@@ -96,24 +96,24 @@ Table contract_sales_reps {
 
 
 Table departments {
-    id varchar(100) [pk, note:'部署ID']
+    department_id varchar(100) [pk, note:'部署ID']
     department_name varchar(20) [not null, note: '所属部署']
 }
 
 
-Ref: contracts.client_id > clients.client_id
+Ref: contracts.client_id ?> clients.client_id
 
-Ref: contract_sales_reps.employee_id > employees.employee_id
-Ref: contract_sales_reps.contract_id > contracts.contract_id
+Ref: contract_sales_reps.employee_id ?> employees.employee_id
+Ref: contract_sales_reps.contract_id ?> contracts.contract_id
 
-Ref: inquiry.client_id > clients.client_id
+Ref: inquiry.client_id ?> clients.client_id
 
-Ref: inquiry_responses.inquiry_id > inquiry.inquiry_id
-Ref: inquiry_responses.employee_id > employees.employee_id
+Ref: inquiry_responses.inquiry_id ?> inquiry.inquiry_id
+Ref: inquiry_responses.employee_id ?> employees.employee_id
 
-Ref: employees.department_id > departments.id
+Ref: employees.department_id > departments.department_id
 
-Ref: contracts.service_id > services.service_id
+Ref: contracts.service_id ?> services.service_id
 
 Ref: client_emails.client_id > clients.client_id
 Ref: client_phonenumbers.client_id > clients.client_id
