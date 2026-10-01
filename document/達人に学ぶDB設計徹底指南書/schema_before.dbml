@@ -127,7 +127,7 @@ Ref: orders.employee_id ?> employees.employee_id
 
 Ref: employees.department_id ?> departments.department_id
 
-Ref: invoices.order_id - orders.order_id
+Ref: invoices.order_id ?- orders.order_id
 
 Ref: deposits.invoice_id ?> invoices.invoice_id
 
