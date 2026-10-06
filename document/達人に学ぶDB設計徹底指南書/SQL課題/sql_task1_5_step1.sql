@@ -131,7 +131,6 @@ WHERE
     i.inquiry_type = '障害'
 ORDER BY ir.inquiry_responses_date ASC;
 
-
 -- SQL-12
 SELECT c.client_id AS 顧客ID, c.client_name AS 顧客名
 FROM clients AS c
@@ -143,7 +142,6 @@ WHERE
             c.client_id = i.client_id
     );
 
-
 -- SQL-13
 SELECT c.client_id AS 顧客ID, c.client_name AS 顧客名
 FROM clients AS c
@@ -154,7 +152,6 @@ WHERE
         WHERE
             c.client_id = i.client_id
     );
-
 
 -- SQL-14
 SELECT e.employee_name AS 社員名
