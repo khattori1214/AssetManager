@@ -145,7 +145,7 @@ FROM (
                 PARTITION BY
                     i.inquiry_id
                 ORDER BY ir.inquiry_responses_date DESC
-            ) AS latest
+            ) AS row_num
         FROM
             inquiry AS i
             LEFT JOIN inquiry_responses AS ir ON i.inquiry_id = ir.inquiry_id
@@ -153,7 +153,7 @@ FROM (
             LEFT JOIN employees AS e ON e.employee_id = ir.employee_id
     ) AS r
 WHERE
-    r.latest = 1;
+    r.row_num = 1;
 
 -- 1. 最新日時だけでなく「最新行の内容」を取得するには何が必要か
 -- MAXで最新日時を求め、その日時に一致する対応履歴の行を、
