@@ -21,7 +21,7 @@ WHERE
 GROUP BY
     od.order_detail_id;
 
--- SQL -2
+-- SQL-2
 SELECT
     od.order_detail_id AS 注文明細ID,
     o.order_number AS 注文番号,
