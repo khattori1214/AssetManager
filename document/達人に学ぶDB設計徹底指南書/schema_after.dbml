@@ -1,0 +1,228 @@
+Table clients {
+    client_id integer [pk, increment, note: '顧客ID']
+    client_code varchar(20) [not null, unique, note: '顧客コード']
+    client_name varchar(100) [not null, note: '顧客名']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '顧客情報'
+}
+
+Table client_contacts {
+    client_contact_id integer [pk, increment, note: '顧客連絡先ID']
+    client_id integer [not null, note: '顧客ID']
+    postcode varchar(20) [not null, note: '郵便番号']
+    address varchar(100) [not null, note: '住所']
+    phonenumber varchar(20) [not null, note: '電話番号']
+    email varchar(255) [not null, note: 'メールアドレス']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '顧客連絡先情報'
+}
+
+table products {
+    product_id integer [pk, increment, note:'商品ID']
+    product_code varchar(20) [not null, unique, note:'商品コード']
+    product_name varchar(100) [not null, note:'商品名']
+    product_category_id integer [not null, note:'カテゴリID']
+    current_unit_price integer [not null, note:'現在販売単価']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '商品情報'
+}
+
+table product_categories {
+    product_category_id integer [pk, increment, note:'カテゴリID']
+    product_category_name varchar(100) [not null, note:'商品カテゴリ名']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '商品カテゴリ'
+}
+
+Table orders {
+    order_id integer [pk, increment, note: '注文ID']
+    order_number varchar(20) [not null, unique, note: '注文番号']
+    order_date date [not null, note: '注文日']
+    client_id integer [not null, note: '顧客ID']
+    order_status varchar(20) [not null, note: '注文状態:受付済・処理中・完了・キャンセル']
+    invoice_id integer [unique,note: '請求ID']
+    employee_id integer [not null, note: '社員ID']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+    //課題3で追加したカラム
+    delivery_address_id integer [not null, note:'配送先ID']
+    order_address_name varchar(100) [not null, note:'注文時配送先名:支店・営業所・倉庫・物流センター']
+    order_address_postcode varchar(10) [not null, note:'注文時郵便番号']
+    order_address varchar(100) [not null, note:'注文時配送先住所']
+    order_addressee varchar(100) [not null, note: '注文時宛名']
+    order_phonenumber varchar(20) [not null, note: '注文時電話番号']
+
+    Note: '注文情報'
+}
+
+
+Table order_details {
+    order_detail_id integer [pk, increment, note: '注文明細ID']
+    product_id integer [not null, note:'商品ID']
+    quantity integer [not null, note: '数量']
+    purchase_unit_price integer [not null, note: '購入単価']
+    price integer [not null, note: '明細金額']
+    product_name_at_order varchar(100) [not null, note:'購入時商品名']
+    order_id integer [not null, note: '注文ID']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '注文明細情報'
+}
+
+Table employees {
+    employee_id integer [pk, increment, note: '社員ID']
+    employee_name varchar(20) [not null, note: '社員名']
+    employee_number varchar(20) [not null, unique, note: '社員番号']
+    department_id integer [not null, note:'部署ID']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '社員情報'
+}
+
+Table invoices {
+    invoice_id integer [pk, increment,note: '請求ID']
+    invoice_number varchar(20) [not null, unique, note:'請求番号']
+    invoice_date date [not null, note: '請求日']
+    invoice_due_date date [not null, note: '支払期限']
+    invoice_amount integer [not null, note: '請求金額']
+    payment_status varchar(20) [not null, note: '請求状態:請求済・一部入金・入金済']
+    addressee varchar(100) [not null, note: '宛名']
+    postcode varchar(20) [not null, note: '請求時の郵便番号']
+    address varchar(100) [not null, note: '請求時の住所']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '請求情報'
+}
+
+Table deposits {
+    deposit_id integer [pk, increment, note: '入金ID']
+    deposit_date date [not null, note: '入金日']
+    deposit_amount integer [not null, note: '入金金額']
+    payment_method varchar(20) [not null, note: '入金方法:銀行振込・クレジットカード・口座振替']
+    invoice_id integer [not null,note: '請求ID']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+
+    Note: '入金情報'
+}
+
+Table departments {
+    department_id integer [pk, increment, note:'部署ID']
+    department_name varchar(20) [not null, note: '部署名']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+}
+
+Table delivery_addresses {
+    delivery_address_id integer [pk, increment, note:'配送先ID']
+    delivery_address_code varchar(20) [not null, unique, note:'配送先コード']
+    delivery_address_name varchar(100) [not null, note:'配送先名:支店・営業所・倉庫・物流センター']
+    addressee varchar(100) [not null, note: '宛名']
+    delivery_address_postcode varchar(10) [not null, note:'郵便番号']
+    delivery_address varchar(100) [not null, note:'配送先住所']
+    phonenumber varchar(20) [not null, note: '配送先電話番号']
+    usage_status varchar(100) [not null, note: '利用状態']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+    //課題3で追加したカラム
+    client_id integer [not null, note:'顧客ID']
+
+    Note: '配送先情報'
+}
+
+Table shipments {
+    shipment_id integer [pk, increment, note:'出荷ID']
+    shipment_number varchar(20) [not null, unique, note:'出荷番号']
+    shipment_day date [not null, note:'出荷日']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+    //課題3で追加したカラム
+    order_id integer [not null, note: '注文ID']
+
+    Note: '出荷情報'
+}
+
+//以下課題3で追加したテーブル
+Table shipments_order_details {
+    shipments_order_details_id integer [pk, increment, note:'出荷明細ID']
+    shipment_id integer [not null, note:'出荷ID']
+    order_detail_id integer [not null, note: '注文明細ID']
+    shipment_amount integer [not null,note:'出荷数量']
+
+    checks {
+        `shipment_amount > 0`
+    }
+
+    Indexes {
+        (shipment_id, order_detail_id) [unique]
+    }
+
+    Note: '出荷明細情報'
+}
+
+Table cancels {
+    cancel_id integer [pk, increment, note:'キャンセルID']
+    cancel_date datetime [not null, note:'キャンセル日時']
+    cancel_quantity integer [not null, note:'キャンセル数量']
+    cancel_reason varchar(200) [not null, note:'キャンセル理由']
+    employee_id integer [not null, note: '社員ID']
+    created_at timestamp [not null, note: '作成日時']
+    updated_at timestamp [not null, note: '更新日時']
+    order_detail_id integer [not null, note: '注文明細ID']
+
+    checks {
+        `cancel_quantity > 0`
+    }
+
+    Note: 'キャンセル情報'
+}
+
+Ref: orders.client_id ?> clients.client_id
+
+Ref: order_details.product_id ?> products.product_id
+Ref: order_details.order_id ?> orders.order_id
+
+Ref: products.product_category_id > product_categories.product_category_id
+
+Ref: orders.employee_id ?> employees.employee_id
+
+Ref: employees.department_id ?> departments.department_id
+
+Ref: orders.invoice_id -? invoices.invoice_id
+
+Ref: deposits.invoice_id ?> invoices.invoice_id
+
+Ref: client_contacts.client_id ?> clients.client_id
+
+
+//以下課題3で追加したリレーション
+//顧客に対してまだ配送先が決まっていない場合がある
+Ref: delivery_addresses.client_id ?> clients.client_id
+//配送先に対してまだ注文がない場合がある
+Ref: orders.delivery_address_id ?> delivery_addresses.delivery_address_id
+//注文に対してまだ出荷されてない場合がある
+Ref: shipments.order_id ?> orders.order_id
+//注文明細に対してまだキャンセルない場合がある
+Ref: cancels.order_detail_id ?> order_details.order_detail_id
+//キャンセル担当社員に対してまだ該当のキャンセルが割り当てられていない場合がある
+Ref: cancels.employee_id ?> employees.employee_id
+
+/*
+出荷に対して1つ以上出荷明細がある
+注文明細に対して出荷明細が0件以上ある
+*/
+Ref: shipments_order_details.shipment_id > shipments.shipment_id
+Ref: shipments_order_details.order_detail_id ?> order_details.order_detail_id
+
+
