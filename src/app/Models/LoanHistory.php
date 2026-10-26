@@ -7,12 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Collection;
-
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
 
 class LoanHistory extends Model
 {
+    use HasFactory;
     protected $table = 'loan_histories';
     protected $primaryKey = 'loan_history_id';
 
